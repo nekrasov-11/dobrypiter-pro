@@ -1,0 +1,17 @@
+[Unit]
+Description=dobrypiter.pro API server
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/var/www/dobrypiter-pro/api
+ExecStart=/usr/bin/node index.js
+Restart=on-failure
+RestartSec=5
+Environment=PORT=3002
+Environment=DATA_DIR=/var/www/dobrypiter-pro/data
+Environment=ADMIN_LOGIN=89128691888
+Environment=ADMIN_PASSWORD=molotboy
+
+[Install]
+WantedBy=multi-user.target

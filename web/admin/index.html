@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Админка — «Добрый Питер»</title>
+    <link rel="icon" type="image/png" href="../favicon.png">
+    <link rel="apple-touch-icon" href="../favicon.png">
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+    <div class="page" id="login-view" hidden>
+        <div class="login-card">
+            <h1>Боксерский клуб «Добрый Питер»</h1>
+            <p class="subtitle">Вход в админку</p>
+            <form id="login-form" autocomplete="off">
+                <label>
+                    Логин
+                    <input type="text" id="login-input" autocomplete="username" required>
+                </label>
+                <label>
+                    Пароль
+                    <input type="password" id="password-input" autocomplete="current-password" required>
+                </label>
+                <button type="submit" class="btn btn-primary">Войти</button>
+                <p class="error" id="login-error" hidden></p>
+            </form>
+        </div>
+    </div>
+
+    <div class="page" id="editor-view" hidden>
+        <header class="editor-header">
+            <h1>Расписание тренировок</h1>
+            <div class="actions">
+                <a href="/" class="btn btn-ghost">← На главную</a>
+                <button type="button" id="save-btn" class="btn btn-primary">Сохранить</button>
+                <button type="button" id="logout-btn" class="btn btn-ghost">Выйти</button>
+            </div>
+        </header>
+        <p class="status" id="status" hidden></p>
+        <div id="groups"></div>
+        <button type="button" id="add-group-btn" class="btn btn-add">+ Добавить группу</button>
+    </div>
+
+    <script src="admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,276 @@
+:root {
+    --bg: #000;
+    --fg: #fff;
+    --accent: #e11d1d;
+    --muted: #bdbdbd;
+    --border: rgba(255, 255, 255, 0.18);
+    --card-bg: rgba(255, 255, 255, 0.04);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+[hidden] { display: none !important; }
+
+body {
+    background: #050505;
+    color: var(--fg);
+    font-family: Arial, Helvetica, sans-serif;
+    line-height: 1.5;
+    min-height: 100vh;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background:
+        radial-gradient(ellipse 60% 40% at 50% 20%, rgba(255, 255, 255, 0.07) 0%, rgba(0, 0, 0, 0) 70%),
+        linear-gradient(180deg, #0a0a0a 0%, #000 100%);
+}
+
+.page {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 32px 24px 80px;
+}
+
+#login-view.page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+.login-card {
+    width: 100%;
+    max-width: 380px;
+    padding: 32px 28px;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+}
+
+.login-card h1 {
+    font-size: 1.2rem;
+    margin-bottom: 4px;
+    text-align: center;
+}
+
+.subtitle {
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.9rem;
+    margin-bottom: 24px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+label {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin-bottom: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+input, select {
+    display: block;
+    width: 100%;
+    margin-top: 6px;
+    padding: 10px 12px;
+    background: rgba(0, 0, 0, 0.5);
+    color: var(--fg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 1rem;
+    text-transform: none;
+    letter-spacing: 0;
+}
+
+input:focus, select:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+.btn {
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 10px 18px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--fg);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.btn-primary {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+    width: 100%;
+    margin-top: 8px;
+}
+
+.btn-primary:hover { background: #c91515; border-color: #c91515; }
+
+.btn-ghost { background: transparent; }
+.btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+
+.btn-add {
+    width: 100%;
+    padding: 14px;
+    border-style: dashed;
+    color: var(--muted);
+    font-size: 0.95rem;
+    margin-top: 16px;
+}
+.btn-add:hover { border-color: var(--accent); color: var(--accent); border-style: solid; }
+
+.btn-icon {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border-radius: 4px;
+    line-height: 1;
+    font-size: 1.1rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+.btn-icon:hover { border-color: var(--accent); color: var(--accent); }
+
+.error {
+    color: var(--accent);
+    font-size: 0.9rem;
+    margin-top: 12px;
+    text-align: center;
+}
+
+.editor-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 24px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+}
+
+.editor-header h1 {
+    font-size: 1.5rem;
+}
+
+.editor-header .actions {
+    display: flex;
+    gap: 8px;
+}
+
+.editor-header .actions .btn-primary {
+    width: auto;
+    margin: 0;
+}
+
+.status {
+    padding: 10px 14px;
+    border-radius: 4px;
+    margin-bottom: 16px;
+    font-size: 0.95rem;
+}
+.status.success { background: rgba(50, 180, 80, 0.15); border: 1px solid rgba(50, 180, 80, 0.4); color: #b6f0c0; }
+.status.error   { background: rgba(225, 29, 29, 0.15); border: 1px solid rgba(225, 29, 29, 0.4); color: #ffb3b3; }
+
+.group {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: 4px;
+    margin-bottom: 16px;
+    overflow: hidden;
+}
+
+.group-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border);
+}
+
+.group-header input.group-name {
+    flex: 1;
+    margin: 0;
+    font-weight: 700;
+    font-size: 1.05rem;
+    background: transparent;
+    border-color: transparent;
+    padding: 6px 8px;
+}
+.group-header input.group-name:focus {
+    background: rgba(0, 0, 0, 0.4);
+    border-color: var(--accent);
+}
+
+.sessions {
+    padding: 12px 18px 16px;
+    display: grid;
+    gap: 8px;
+}
+
+.session-row {
+    display: grid;
+    grid-template-columns: 1fr 110px auto 110px auto;
+    gap: 8px;
+    align-items: center;
+}
+
+.session-row .dash {
+    color: var(--muted);
+    text-align: center;
+}
+
+.session-row select,
+.session-row input[type="time"] {
+    margin-top: 0;
+}
+
+.add-session {
+    margin-top: 4px;
+    padding: 8px;
+    font-size: 0.85rem;
+    border-style: dashed;
+    color: var(--muted);
+    background: transparent;
+    border: 1px dashed var(--border);
+    border-radius: 4px;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-family: inherit;
+    width: 100%;
+}
+.add-session:hover { border-color: var(--accent); color: var(--accent); border-style: solid; }
+
+@media (max-width: 600px) {
+    .session-row {
+        grid-template-columns: 1fr 1fr auto;
+        grid-template-areas:
+            "day day delete"
+            "start end .";
+    }
+    .session-row select { grid-area: day; }
+    .session-row .dash { display: none; }
+    .session-row input[type="time"]:nth-of-type(1) { grid-area: start; }
+    .session-row input[type="time"]:nth-of-type(2) { grid-area: end; }
+    .session-row .btn-icon { grid-area: delete; }
+}
