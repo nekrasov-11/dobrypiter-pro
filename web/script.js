@@ -81,19 +81,21 @@
         restartAuto();
     });
 
-    document.querySelectorAll("[data-signup-block]").forEach(function (block) {
-        const form = block.querySelector("[data-signup-form]");
-        const successModal = document.querySelector("[data-signup-success]");
+    (function initSignup() {
+        const modal = document.querySelector("[data-signup-modal]");
+        const block = modal && modal.querySelector("[data-signup-block]");
+        const form = block && block.querySelector("[data-signup-form]");
+        const formView = modal && modal.querySelector("[data-signup-form-view]");
+        const successView = modal && modal.querySelector("[data-signup-success-view]");
         const status = form && form.querySelector("[data-form-status]");
         const submit = form && form.querySelector(".signup-submit");
         const submitLabel = submit && submit.querySelector(".signup-submit-label");
-        const tgFallback = block.getAttribute("data-tg-fallback") || "https://t.me/nekrasov_valeriy";
-        if (!form || !successModal || !submit) return;
+        const tgFallback = block && block.getAttribute("data-tg-fallback") || "https://t.me/nekrasov_valeriy";
+        if (!modal || !form || !submit || !formView || !successView) return;
 
         const phoneInput = form.querySelector('[name="phone"]');
-
-        // Phone prefix +7
         const PHONE_PREFIX = "+7 ";
+
         if (phoneInput) {
             if (!phoneInput.value || !phoneInput.value.trim()) phoneInput.value = PHONE_PREFIX;
             phoneInput.addEventListener("focus", function () {
@@ -137,20 +139,45 @@
             return digits.length >= 10 && digits.length <= 11;
         }
 
-        // Modal
+        function showFormView() {
+            formView.hidden = false;
+            successView.hidden = true;
+            hideStatus();
+        }
+        function showSuccessView() {
+            formView.hidden = true;
+            successView.hidden = false;
+        }
         function openModal() {
-            successModal.hidden = false;
+            showFormView();
+            modal.hidden = false;
             document.body.style.overflow = "hidden";
+            const firstField = form.querySelector('[name="name"]');
+            if (firstField) setTimeout(function () { firstField.focus(); }, 50);
         }
         function closeModal() {
-            successModal.hidden = true;
+            modal.hidden = true;
             document.body.style.overflow = "";
+            // Сбрасываем форму, чтобы при следующем открытии было чисто
+            form.reset();
+            if (phoneInput) phoneInput.value = PHONE_PREFIX;
+            showFormView();
         }
-        successModal.querySelectorAll("[data-modal-close]").forEach(function (el) {
+
+        // Открытие модалки
+        document.querySelectorAll("[data-open-signup]").forEach(function (btn) {
+            btn.addEventListener("click", function (e) {
+                e.preventDefault();
+                openModal();
+            });
+        });
+
+        // Закрытие
+        modal.querySelectorAll("[data-modal-close]").forEach(function (el) {
             el.addEventListener("click", closeModal);
         });
         document.addEventListener("keydown", function (e) {
-            if (e.key === "Escape" && !successModal.hidden) closeModal();
+            if (e.key === "Escape" && !modal.hidden) closeModal();
         });
 
         // Submit
@@ -188,9 +215,7 @@
                 if (!res.ok) throw new Error("HTTP " + res.status);
                 const data = await res.json().catch(function () { return {}; });
                 if (data && data.error) throw new Error(data.error);
-                form.reset();
-                if (phoneInput) phoneInput.value = PHONE_PREFIX;
-                openModal();
+                showSuccessView();
                 if (typeof ym === "function") ym(108780081, "reachGoal", "signup_form_submit");
             } catch (err) {
                 genericError();
@@ -199,7 +224,7 @@
                 if (submitLabel) submitLabel.textContent = submit.getAttribute("data-default-label") || "Записаться на пробное";
             }
         });
-    });
+    })();
 
     const video = document.querySelector(".hero-video");
     const toggle = document.querySelector(".hero-sound-toggle");

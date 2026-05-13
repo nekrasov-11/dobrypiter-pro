@@ -79,7 +79,7 @@
 
     <link rel="icon" type="image/png" href="favicon.png">
     <link rel="apple-touch-icon" href="favicon.png">
-    <link rel="stylesheet" href="style.css?v=20260513e">
+    <link rel="stylesheet" href="style.css?v=20260513f">
 </head>
 <body>
     <header class="site-header">
@@ -124,6 +124,14 @@
             <p class="section-subtitle">Сезон 2025 – 2026</p>
             <div class="schedule-grid" id="schedule-grid">
                 <p class="schedule-loading">Загрузка расписания…</p>
+            </div>
+        </section>
+
+        <section id="signup" class="signup-cta-section">
+            <div class="signup-cta-card">
+                <p class="signup-cta-tagline">Не нашли подходящее время — или хотите попробовать перед покупкой?</p>
+                <button type="button" class="btn btn-primary btn-large" data-open-signup>Записаться на пробное занятие</button>
+                <p class="signup-cta-note">Тренер свяжется в&nbsp;ближайшее время. Без обязательств.</p>
             </div>
         </section>
 
@@ -219,64 +227,68 @@
             </div>
         </section>
 
-        <section id="signup" class="section">
-            <h2>Записаться на пробное занятие</h2>
-            <p class="signup-intro">Оставьте контакты — тренер свяжется и&nbsp;расскажет, что взять с&nbsp;собой и&nbsp;в&nbsp;какое время удобнее прийти. Без обязательств.</p>
+    </main>
 
-            <div class="signup-block" data-signup-block data-tg-fallback="https://t.me/nekrasov_valeriy">
-                <form class="signup-form" data-signup-form data-endpoint="https://dobrypiter-form-handler.nekrasov-smotra.workers.dev" novalidate>
-                    <div class="form-row">
-                        <label for="signup-name">Имя <span class="required" aria-hidden="true">*</span><span class="sr-only"> (обязательное поле)</span></label>
-                        <input id="signup-name" name="name" type="text" minlength="2" maxlength="60" required autocomplete="given-name">
-                    </div>
+    <div class="modal" data-signup-modal hidden role="dialog" aria-modal="true" aria-labelledby="signup-modal-title">
+        <div class="modal-backdrop" data-modal-close aria-hidden="true"></div>
+        <div class="modal-card modal-card-wide">
+            <button class="modal-close" type="button" data-modal-close aria-label="Закрыть">×</button>
 
-                    <div class="form-row">
-                        <label for="signup-phone">Телефон <span class="required" aria-hidden="true">*</span><span class="sr-only"> (обязательное поле)</span></label>
-                        <input id="signup-phone" name="phone" type="tel" inputmode="tel" maxlength="20" required autocomplete="tel" value="+7 ">
-                    </div>
+            <div data-signup-form-view>
+                <h3 id="signup-modal-title">Записаться на пробное занятие</h3>
+                <p class="signup-intro">Оставьте контакты — тренер свяжется и&nbsp;расскажет, что взять с&nbsp;собой и&nbsp;в&nbsp;какое время удобнее прийти. Без обязательств.</p>
 
-                    <div class="form-row">
-                        <label for="signup-group">Группа <span class="required" aria-hidden="true">*</span><span class="sr-only"> (обязательное поле)</span></label>
-                        <select id="signup-group" name="group" required>
-                            <option value="" disabled selected>— Выберите группу —</option>
-                            <option value="Взрослая">Взрослая</option>
-                            <option value="Подростковая">Подростковая</option>
-                            <option value="Детская">Детская</option>
-                            <option value="Женская">Женская</option>
-                            <option value="Индивидуальные тренировки">Индивидуальные тренировки</option>
-                            <option value="Не знаю, посоветуйте">Не знаю, посоветуйте</option>
-                        </select>
-                    </div>
+                <div class="signup-block" data-signup-block data-tg-fallback="https://t.me/nekrasov_valeriy">
+                    <form class="signup-form" data-signup-form data-endpoint="https://dobrypiter-form-handler.nekrasov-smotra.workers.dev" novalidate>
+                        <div class="form-row">
+                            <label for="signup-name">Имя <span class="required" aria-hidden="true">*</span><span class="sr-only"> (обязательное поле)</span></label>
+                            <input id="signup-name" name="name" type="text" minlength="2" maxlength="60" required autocomplete="given-name">
+                        </div>
 
-                    <div class="form-row">
-                        <label for="signup-comment">Комментарий</label>
-                        <textarea id="signup-comment" name="comment" rows="3" maxlength="600"></textarea>
-                    </div>
+                        <div class="form-row">
+                            <label for="signup-phone">Телефон <span class="required" aria-hidden="true">*</span><span class="sr-only"> (обязательное поле)</span></label>
+                            <input id="signup-phone" name="phone" type="tel" inputmode="tel" maxlength="20" required autocomplete="tel" value="+7 ">
+                        </div>
 
-                    <div class="form-honeypot" aria-hidden="true">
-                        <label for="signup-website">Сайт (не заполнять)</label>
-                        <input id="signup-website" name="website" type="text" tabindex="-1" autocomplete="off">
-                    </div>
+                        <div class="form-row">
+                            <label for="signup-group">Группа <span class="required" aria-hidden="true">*</span><span class="sr-only"> (обязательное поле)</span></label>
+                            <select id="signup-group" name="group" required>
+                                <option value="" disabled selected>— Выберите группу —</option>
+                                <option value="Взрослая">Взрослая</option>
+                                <option value="Подростковая">Подростковая</option>
+                                <option value="Детская">Детская</option>
+                                <option value="Женская">Женская</option>
+                                <option value="Индивидуальные тренировки">Индивидуальные тренировки</option>
+                                <option value="Не знаю, посоветуйте">Не знаю, посоветуйте</option>
+                            </select>
+                        </div>
 
-                    <button type="submit" class="btn btn-primary signup-submit" data-default-label="Записаться на пробное">
-                        <span class="signup-submit-label">Записаться на пробное</span>
-                    </button>
+                        <div class="form-row">
+                            <label for="signup-comment">Комментарий</label>
+                            <textarea id="signup-comment" name="comment" rows="3" maxlength="600"></textarea>
+                        </div>
 
-                    <p class="form-status" data-form-status hidden></p>
-                </form>
-            </div>
+                        <div class="form-honeypot" aria-hidden="true">
+                            <label for="signup-website">Сайт (не заполнять)</label>
+                            <input id="signup-website" name="website" type="text" tabindex="-1" autocomplete="off">
+                        </div>
 
-            <div class="modal" data-signup-success hidden role="dialog" aria-modal="true" aria-labelledby="signup-success-title">
-                <div class="modal-backdrop" data-modal-close aria-hidden="true"></div>
-                <div class="modal-card">
-                    <button class="modal-close" type="button" data-modal-close aria-label="Закрыть">×</button>
-                    <h3 id="signup-success-title">Спасибо! Заявка отправлена.</h3>
-                    <p>Тренер свяжется с&nbsp;вами в&nbsp;ближайшее время. Если хочется быстрее — напишите в&nbsp;<a href="https://t.me/nekrasov_valeriy" target="_blank" rel="noopener">Telegram</a>.</p>
-                    <button type="button" class="btn btn-primary" data-modal-close>Хорошо</button>
+                        <button type="submit" class="btn btn-primary signup-submit" data-default-label="Записаться на пробное">
+                            <span class="signup-submit-label">Записаться на пробное</span>
+                        </button>
+
+                        <p class="form-status" data-form-status hidden></p>
+                    </form>
                 </div>
             </div>
-        </section>
-    </main>
+
+            <div data-signup-success-view hidden>
+                <h3>Спасибо! Заявка отправлена.</h3>
+                <p>Тренер свяжется с&nbsp;вами в&nbsp;ближайшее время. Если хочется быстрее — напишите в&nbsp;<a href="https://t.me/nekrasov_valeriy" target="_blank" rel="noopener">Telegram</a>.</p>
+                <button type="button" class="btn btn-primary" data-modal-close>Хорошо</button>
+            </div>
+        </div>
+    </div>
 
     <footer class="site-footer">
         <p>© Боксерский клуб «Добрый Питер»</p>
@@ -296,6 +308,6 @@
         </a>
     </div>
 
-    <script src="script.js?v=20260513e"></script>
+    <script src="script.js?v=20260513f"></script>
 </body>
 </html>
