@@ -81,6 +81,126 @@
         restartAuto();
     });
 
+    document.querySelectorAll("[data-signup-block]").forEach(function (block) {
+        const form = block.querySelector("[data-signup-form]");
+        const successModal = document.querySelector("[data-signup-success]");
+        const status = form && form.querySelector("[data-form-status]");
+        const submit = form && form.querySelector(".signup-submit");
+        const submitLabel = submit && submit.querySelector(".signup-submit-label");
+        const tgFallback = block.getAttribute("data-tg-fallback") || "https://t.me/nekrasov_valeriy";
+        if (!form || !successModal || !submit) return;
+
+        const phoneInput = form.querySelector('[name="phone"]');
+
+        // Phone prefix +7
+        const PHONE_PREFIX = "+7 ";
+        if (phoneInput) {
+            if (!phoneInput.value || !phoneInput.value.trim()) phoneInput.value = PHONE_PREFIX;
+            phoneInput.addEventListener("focus", function () {
+                if (!phoneInput.value || phoneInput.value === "+7") phoneInput.value = PHONE_PREFIX;
+                requestAnimationFrame(function () {
+                    const end = phoneInput.value.length;
+                    phoneInput.setSelectionRange(end, end);
+                });
+            });
+            phoneInput.addEventListener("input", function () {
+                if (!phoneInput.value.startsWith("+7")) {
+                    const rest = phoneInput.value.replace(/^[\s+]*7?\s*/, "");
+                    phoneInput.value = PHONE_PREFIX + rest;
+                }
+            });
+            phoneInput.addEventListener("keydown", function (e) {
+                if ((e.key === "Backspace" || e.key === "Delete") && phoneInput.selectionStart <= PHONE_PREFIX.length && phoneInput.selectionEnd <= PHONE_PREFIX.length) {
+                    e.preventDefault();
+                }
+            });
+        }
+
+        function showStatus(message, isError) {
+            if (!status) return;
+            status.innerHTML = message;
+            status.classList.toggle("is-error", !!isError);
+            status.hidden = false;
+        }
+        function hideStatus() {
+            if (!status) return;
+            status.hidden = true;
+            status.textContent = "";
+            status.classList.remove("is-error");
+        }
+        function genericError() {
+            const link = '<a href="' + tgFallback + '" target="_blank" rel="noopener">' + tgFallback.replace(/^https?:\/\//, "") + '</a>';
+            showStatus("Что-то пошло не&nbsp;так. Напишите нам в&nbsp;Telegram: " + link, true);
+        }
+        function validatePhone(value) {
+            const digits = String(value || "").replace(/\D+/g, "");
+            return digits.length >= 10 && digits.length <= 11;
+        }
+
+        // Modal
+        function openModal() {
+            successModal.hidden = false;
+            document.body.style.overflow = "hidden";
+        }
+        function closeModal() {
+            successModal.hidden = true;
+            document.body.style.overflow = "";
+        }
+        successModal.querySelectorAll("[data-modal-close]").forEach(function (el) {
+            el.addEventListener("click", closeModal);
+        });
+        document.addEventListener("keydown", function (e) {
+            if (e.key === "Escape" && !successModal.hidden) closeModal();
+        });
+
+        // Submit
+        form.addEventListener("submit", async function (e) {
+            e.preventDefault();
+            hideStatus();
+            if (!form.checkValidity()) { form.reportValidity(); return; }
+            if (phoneInput && !validatePhone(phoneInput.value)) {
+                phoneInput.focus();
+                showStatus("Проверьте номер телефона — кажется, неполный.", true);
+                return;
+            }
+            const endpoint = (form.getAttribute("data-endpoint") || "").trim();
+            if (!endpoint) {
+                const link = '<a href="' + tgFallback + '" target="_blank" rel="noopener">' + tgFallback.replace(/^https?:\/\//, "") + '</a>';
+                showStatus("Форма ещё не&nbsp;настроена. Напишите нам в&nbsp;Telegram: " + link, true);
+                return;
+            }
+            const formData = new FormData(form);
+            const payload = {
+                name: (formData.get("name") || "").toString().trim(),
+                phone: (formData.get("phone") || "").toString().trim(),
+                group: (formData.get("group") || "").toString(),
+                comment: (formData.get("comment") || "").toString().trim(),
+                website: (formData.get("website") || "").toString(),
+            };
+            submit.disabled = true;
+            if (submitLabel) submitLabel.textContent = "Отправляем…";
+            try {
+                const res = await fetch(endpoint, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload),
+                });
+                if (!res.ok) throw new Error("HTTP " + res.status);
+                const data = await res.json().catch(function () { return {}; });
+                if (data && data.error) throw new Error(data.error);
+                form.reset();
+                if (phoneInput) phoneInput.value = PHONE_PREFIX;
+                openModal();
+                if (typeof ym === "function") ym(108780081, "reachGoal", "signup_form_submit");
+            } catch (err) {
+                genericError();
+            } finally {
+                submit.disabled = false;
+                if (submitLabel) submitLabel.textContent = submit.getAttribute("data-default-label") || "Записаться на пробное";
+            }
+        });
+    });
+
     const video = document.querySelector(".hero-video");
     const toggle = document.querySelector(".hero-sound-toggle");
     const label = toggle && toggle.querySelector(".hero-sound-label");
