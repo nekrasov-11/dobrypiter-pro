@@ -18,11 +18,18 @@
 
     const grid = document.getElementById("schedule-grid");
     if (grid) {
+        // Статичные карточки уже отрендерены в HTML — для SEO и для случая
+        // когда API недоступен. Если fetch успешен, перерисуем свежими данными
+        // (например, после правки расписания через админку).
         fetch("/api/schedule")
             .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
-            .then(function (data) { renderSchedule(grid, data); })
+            .then(function (data) {
+                if (data && Array.isArray(data.groups) && data.groups.length) {
+                    renderSchedule(grid, data);
+                }
+            })
             .catch(function () {
-                grid.innerHTML = '<p class="schedule-loading">Не удалось загрузить расписание.</p>';
+                // API недоступен — оставляем статический HTML как есть
             });
     }
 
