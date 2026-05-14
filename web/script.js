@@ -169,6 +169,7 @@
             btn.addEventListener("click", function (e) {
                 e.preventDefault();
                 openModal();
+                if (typeof ym === "function") ym(108780081, "reachGoal", "form_open");
             });
         });
 
@@ -216,7 +217,7 @@
                 const data = await res.json().catch(function () { return {}; });
                 if (data && data.error) throw new Error(data.error);
                 showSuccessView();
-                if (typeof ym === "function") ym(108780081, "reachGoal", "signup_form_submit");
+                if (typeof ym === "function") ym(108780081, "reachGoal", "form_submit");
             } catch (err) {
                 genericError();
             } finally {
