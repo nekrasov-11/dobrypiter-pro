@@ -15,11 +15,11 @@
     --accent: #e63329;
     --accent-hover: #c9231a;
     --pad: 2.5rem;
-    --content-max: 1320px;
+    --content-max: 1100px;
 }
 
 /* Отступы по бокам на широких экранах — контент центрируется в --content-max */
-@media (min-width: 1440px) {
+@media (min-width: 1240px) {
     :root { --pad: calc((100vw - var(--content-max)) / 2); }
 }
 
@@ -305,21 +305,26 @@ a { color: inherit; }
 .an {
     background: var(--bg2);
     padding: 1.6rem 1.4rem;
+    transition: background .2s, transform .2s;
+}
+.an:hover {
+    background: #232320;
+    transform: translateY(-2px);
 }
 .an-num {
     font-family: 'Unbounded', sans-serif;
-    font-size: 2.1rem;
+    font-size: 1.6rem;
     font-weight: 700;
     color: var(--accent);
-    line-height: 1;
+    line-height: 1.1;
+    text-transform: uppercase;
+    letter-spacing: .02em;
 }
 .an-label {
-    font-size: .78rem;
-    text-transform: uppercase;
-    letter-spacing: .08em;
+    font-size: .88rem;
     color: var(--gray);
-    margin-top: .5rem;
-    line-height: 1.4;
+    margin-top: .6rem;
+    line-height: 1.5;
 }
 
 /* ===== Photos grid ===== */
