@@ -351,6 +351,14 @@ a { color: inherit; }
     aspect-ratio: 16 / 7;
 }
 
+/* Одиночное фото для мобайла — на десктопе скрыто */
+.photos-mobile {
+    display: none;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+
 /* ===== Schedule ===== */
 .sch-grid {
     display: grid;
@@ -890,16 +898,9 @@ a { color: inherit; }
     .logo img { height: 36px; }
     .hero-meta > div, .hero-meta > a { flex: 1 1 40%; }
     .hm-num { font-size: 1.4rem; }
-    /* Фото — компактный коллаж 3×2 квадратами, без пустот */
-    .photos-grid {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 2px;
-    }
-    .photos-grid img,
-    .photos-grid img.photo-wide {
-        aspect-ratio: 1 / 1;
-        grid-column: auto;
-    }
+    /* На мобайле коллаж скрыт — показываем одну фотку команды */
+    .photos-grid { display: none; }
+    .photos-mobile { display: block; }
     .sch-grid { grid-template-columns: 1fr; }
     .sch-card:last-child:nth-child(odd) { grid-column: auto; }
     .cd-grid { grid-template-columns: 1fr; gap: 1rem; }
