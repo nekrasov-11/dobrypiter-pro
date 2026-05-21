@@ -382,8 +382,10 @@ a { color: inherit; }
 .sch-row {
     display: flex;
     justify-content: space-between;
-    margin-bottom: .65rem;
+    padding: .55rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, .06);
 }
+.sch-row:last-of-type { border-bottom: none; }
 .sch-day { font-size: .85rem; color: var(--gray); }
 .sch-time { font-size: .85rem; font-weight: 500; color: var(--white); }
 
@@ -854,13 +856,17 @@ a { color: inherit; }
 
     .contact-grid { grid-template-columns: 1fr; }
     .contact-left {
+        order: 2;
         padding-right: 0;
-        padding-bottom: 2rem;
+        padding-top: 2rem;
         border-right: none;
-        border-bottom: 1px solid var(--lgray);
-        margin-bottom: 2rem;
+        border-top: 1px solid var(--lgray);
+        margin-top: 2rem;
     }
-    .contact-right { padding-left: 0; }
+    .contact-right {
+        order: 1;
+        padding-left: 0;
+    }
     .contact-title { font-size: 1.45rem; }
 
     .site-footer {
@@ -876,8 +882,18 @@ a { color: inherit; }
     .logo img { height: 36px; }
     .hero-meta > div, .hero-meta > a { flex: 1 1 40%; }
     .hm-num { font-size: 1.4rem; }
-    .photos-grid { grid-template-columns: 1fr; gap: 2px; }
-    .photos-grid img.photo-wide { grid-column: auto; aspect-ratio: 4 / 3; }
+    /* Фото — компактный коллаж 3 колонки, квадратные */
+    .photos-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 2px;
+    }
+    .photos-grid img {
+        aspect-ratio: 1 / 1;
+    }
+    .photos-grid img.photo-wide {
+        grid-column: span 3;
+        aspect-ratio: 16 / 9;
+    }
     .sch-grid { grid-template-columns: 1fr; }
     .sch-card:last-child:nth-child(odd) { grid-column: auto; }
     .cd-grid { grid-template-columns: 1fr; gap: 1rem; }
