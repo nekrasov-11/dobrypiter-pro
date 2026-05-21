@@ -733,6 +733,14 @@ a { color: inherit; }
     white-space: nowrap; border: 0;
 }
 
+/* Desktop-only / Mobile-only видимость */
+.desktop-only { display: block; }
+.mobile-only { display: none; }
+@media (max-width: 900px) {
+    .desktop-only { display: none; }
+    .mobile-only { display: block; }
+}
+
 /* ===== Mobile / адаптив ===== */
 @media (max-width: 900px) {
     :root { --pad: 1.25rem; }
@@ -882,17 +890,15 @@ a { color: inherit; }
     .logo img { height: 36px; }
     .hero-meta > div, .hero-meta > a { flex: 1 1 40%; }
     .hm-num { font-size: 1.4rem; }
-    /* Фото — компактный коллаж 3 колонки, квадратные */
+    /* Фото — компактный коллаж 3×2 квадратами, без пустот */
     .photos-grid {
         grid-template-columns: repeat(3, 1fr);
         gap: 2px;
     }
-    .photos-grid img {
-        aspect-ratio: 1 / 1;
-    }
+    .photos-grid img,
     .photos-grid img.photo-wide {
-        grid-column: span 3;
-        aspect-ratio: 16 / 9;
+        aspect-ratio: 1 / 1;
+        grid-column: auto;
     }
     .sch-grid { grid-template-columns: 1fr; }
     .sch-card:last-child:nth-child(odd) { grid-column: auto; }

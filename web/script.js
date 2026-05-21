@@ -19,7 +19,7 @@
         if (!groups.length) return;
         const html = groups.map(function (g) {
             const rows = (g.sessions || []).map(function (s) {
-                return '<div class="sch-row"><span class="sch-day">' + escapeHtml(shortDay(s.day)) + '</span><span class="sch-time">' + escapeHtml(s.start) + '–' + escapeHtml(s.end) + '</span></div>';
+                return '<div class="sch-row"><span class="sch-day">' + escapeHtml(s.day) + '</span><span class="sch-time">' + escapeHtml(s.start) + '–' + escapeHtml(s.end) + '</span></div>';
             }).join("");
             const sessions = (g.sessions || []).length;
             const badge = sessions ? '<span class="sch-badge">' + sessions + '×/неделю</span>' : '';
@@ -30,14 +30,6 @@
                 '</article>';
         }).join("");
         target.innerHTML = html;
-    }
-
-    function shortDay(day) {
-        const map = {
-            "Понедельник": "Пн", "Вторник": "Вт", "Среда": "Ср",
-            "Четверг": "Чт", "Пятница": "Пт", "Суббота": "Сб", "Воскресенье": "Вс"
-        };
-        return map[day] || day;
     }
 
     function escapeHtml(s) {
