@@ -15,6 +15,12 @@
     --accent: #e63329;
     --accent-hover: #c9231a;
     --pad: 2.5rem;
+    --content-max: 1320px;
+}
+
+/* Отступы по бокам на широких экранах — контент центрируется в --content-max */
+@media (min-width: 1440px) {
+    :root { --pad: calc((100vw - var(--content-max)) / 2); }
 }
 
 html { scroll-behavior: smooth; }
@@ -36,13 +42,14 @@ a { color: inherit; }
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem var(--pad);
+    padding: .5rem var(--pad);
     border-bottom: 1px solid var(--lgray);
     position: sticky;
     top: 0;
     background: var(--bg);
     z-index: 100;
     gap: 1rem;
+    min-height: 80px;
 }
 
 .logo {
@@ -54,7 +61,7 @@ a { color: inherit; }
 }
 .logo img {
     display: block;
-    height: 48px;
+    height: 68px;
     width: auto;
 }
 
@@ -417,22 +424,38 @@ a { color: inherit; }
     color: var(--accent);
     margin-bottom: 1.5rem;
 }
-.coach-stat {
-    display: inline-flex;
-    align-items: center;
+.coach-badges {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
     gap: 1rem;
-    border: 1px solid var(--lgray);
-    padding: 1rem 1.3rem;
-    margin-bottom: 1.5rem;
-    border-radius: 2px;
+    margin-bottom: 1.8rem;
 }
-.cs-num {
+.coach-badge {
+    border: 1px solid var(--lgray);
+    padding: 1.1rem 1.2rem;
+    border-radius: 2px;
+    background: var(--bg2);
+    transition: border-color .2s, transform .2s;
+}
+.coach-badge:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+}
+.coach-badge .cb-head {
+    display: block;
     font-family: 'Unbounded', sans-serif;
-    font-size: 1.8rem;
+    font-size: 1.05rem;
     font-weight: 700;
     color: var(--accent);
+    line-height: 1.1;
+    margin-bottom: .5rem;
 }
-.cs-text { font-size: .85rem; line-height: 1.4; color: var(--gray); }
+.coach-badge .cb-text {
+    display: block;
+    font-size: .9rem;
+    color: var(--gray);
+    line-height: 1.45;
+}
 .coach-bio {
     font-size: 1rem;
     color: var(--gray);
