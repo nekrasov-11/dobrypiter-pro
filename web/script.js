@@ -1,26 +1,7 @@
 (function () {
-    const root = document.documentElement;
-    let ticking = false;
-
-    function update() {
-        root.style.setProperty("--scroll", window.scrollY);
-        ticking = false;
-    }
-
-    window.addEventListener("scroll", function () {
-        if (!ticking) {
-            window.requestAnimationFrame(update);
-            ticking = true;
-        }
-    }, { passive: true });
-
-    update();
-
+    // ===== Schedule: подмена статичного HTML свежими данными из API =====
     const grid = document.getElementById("schedule-grid");
     if (grid) {
-        // Статичные карточки уже отрендерены в HTML — для SEO и для случая
-        // когда API недоступен. Если fetch успешен, перерисуем свежими данными
-        // (например, после правки расписания через админку).
         fetch("/api/schedule")
             .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
             .then(function (data) {
@@ -29,26 +10,36 @@
                 }
             })
             .catch(function () {
-                // API недоступен — оставляем статический HTML как есть
+                // API недоступен — оставляем статический HTML
             });
     }
 
     function renderSchedule(target, data) {
         const groups = (data && Array.isArray(data.groups)) ? data.groups : [];
-        if (!groups.length) {
-            target.innerHTML = '<p class="schedule-loading">Расписание пока не заполнено.</p>';
-            return;
-        }
-        const html = groups.map(function (g) {
+        if (!groups.length) return;
+        const lastIdx = groups.length - 1;
+        const html = groups.map(function (g, idx) {
             const rows = (g.sessions || []).map(function (s) {
-                return '<tr><td>' + escapeHtml(s.day) + '</td><td>' + escapeHtml(s.start) + ' – ' + escapeHtml(s.end) + '</td></tr>';
+                return '<div class="sch-row"><span class="sch-day">' + escapeHtml(shortDay(s.day)) + '</span><span class="sch-time">' + escapeHtml(s.start) + '–' + escapeHtml(s.end) + '</span></div>';
             }).join("");
-            return '<article class="schedule-card">' +
-                '<h3>' + escapeHtml(g.name) + '</h3>' +
-                '<table class="schedule-table"><tbody>' + rows + '</tbody></table>' +
+            const sessions = (g.sessions || []).length;
+            const badge = sessions ? '<span class="sch-badge">' + sessions + '×/неделю</span>' : '';
+            const cls = (idx === lastIdx ? 'sch-card accent' : 'sch-card');
+            return '<article class="' + cls + '">' +
+                '<div class="sch-card-title">' + escapeHtml(g.name) + '</div>' +
+                rows +
+                badge +
                 '</article>';
         }).join("");
         target.innerHTML = html;
+    }
+
+    function shortDay(day) {
+        const map = {
+            "Понедельник": "Пн", "Вторник": "Вт", "Среда": "Ср",
+            "Четверг": "Чт", "Пятница": "Пт", "Суббота": "Сб", "Воскресенье": "Вс"
+        };
+        return map[day] || day;
     }
 
     function escapeHtml(s) {
@@ -57,15 +48,21 @@
         });
     }
 
+    // ===== Reviews carousel (активна только на mobile — на desktop стрелки/dots скрыты CSS) =====
     document.querySelectorAll("[data-reviews-carousel]").forEach(function (carouselEl) {
-        const slides = Array.prototype.slice.call(carouselEl.querySelectorAll(".rc-slide"));
-        const dots = Array.prototype.slice.call(carouselEl.querySelectorAll(".rc-dot"));
-        const prev = carouselEl.querySelector(".rc-prev");
-        const next = carouselEl.querySelector(".rc-next");
+        const slides = Array.prototype.slice.call(carouselEl.querySelectorAll(".rev-card"));
+        const dots = Array.prototype.slice.call(carouselEl.querySelectorAll(".rev-dot"));
+        const prev = carouselEl.querySelector(".rev-prev");
+        const next = carouselEl.querySelector(".rev-next");
         if (!slides.length) return;
         const interval = parseInt(carouselEl.getAttribute("data-interval"), 10) || 10000;
         let idx = 0;
         let timer = null;
+
+        function isCarouselActive() {
+            // На десктопе стрелки скрыты CSS — карусель отключаем
+            return prev && getComputedStyle(prev).display !== "none";
+        }
 
         function show(target) {
             idx = ((target % slides.length) + slides.length) % slides.length;
@@ -75,30 +72,52 @@
 
         function restartAuto() {
             if (timer) clearInterval(timer);
+            if (!isCarouselActive()) return;
             timer = setInterval(function () { show(idx + 1); }, interval);
+        }
+
+        function stopAuto() {
+            if (timer) { clearInterval(timer); timer = null; }
         }
 
         if (prev) prev.addEventListener("click", function () { show(idx - 1); restartAuto(); });
         if (next) next.addEventListener("click", function () { show(idx + 1); restartAuto(); });
         dots.forEach(function (d, k) { d.addEventListener("click", function () { show(k); restartAuto(); }); });
 
-        carouselEl.addEventListener("mouseenter", function () { if (timer) { clearInterval(timer); timer = null; } });
+        carouselEl.addEventListener("mouseenter", stopAuto);
         carouselEl.addEventListener("mouseleave", restartAuto);
+
+        // При ресайзе пересмотреть, активна ли карусель
+        let resizeTimer;
+        window.addEventListener("resize", function () {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(function () {
+                if (isCarouselActive()) {
+                    restartAuto();
+                } else {
+                    stopAuto();
+                    // На desktop возвращаем первую видимой (на всякий случай)
+                    slides.forEach(function (s, k) { s.classList.toggle("is-active", k === 0); });
+                    dots.forEach(function (d, k) { d.classList.toggle("is-active", k === 0); });
+                    idx = 0;
+                }
+            }, 200);
+        });
 
         restartAuto();
     });
 
+    // ===== Inline signup form =====
     (function initSignup() {
-        const modal = document.querySelector("[data-signup-modal]");
-        const block = modal && modal.querySelector("[data-signup-block]");
-        const form = block && block.querySelector("[data-signup-form]");
-        const formView = modal && modal.querySelector("[data-signup-form-view]");
-        const successView = modal && modal.querySelector("[data-signup-success-view]");
+        const form = document.querySelector("[data-signup-form]");
+        const block = document.querySelector("[data-signup-block]");
+        const formView = document.querySelector("[data-signup-form-view]");
+        const successView = document.querySelector("[data-signup-success-view]");
         const status = form && form.querySelector("[data-form-status]");
         const submit = form && form.querySelector(".signup-submit");
         const submitLabel = submit && submit.querySelector(".signup-submit-label");
-        const tgFallback = block && block.getAttribute("data-tg-fallback") || "https://t.me/nekrasov_valeriy";
-        if (!modal || !form || !submit || !formView || !successView) return;
+        const tgFallback = (block && block.getAttribute("data-tg-fallback")) || "https://t.me/nekrasov_valeriy";
+        if (!form || !submit || !formView || !successView) return;
 
         const phoneInput = form.querySelector('[name="phone"]');
         const PHONE_PREFIX = "+7 ";
@@ -155,38 +174,11 @@
             formView.hidden = true;
             successView.hidden = false;
         }
-        function openModal() {
-            showFormView();
-            modal.hidden = false;
-            document.body.style.overflow = "hidden";
-            const firstField = form.querySelector('[name="name"]');
-            if (firstField) setTimeout(function () { firstField.focus(); }, 50);
-        }
-        function closeModal() {
-            modal.hidden = true;
-            document.body.style.overflow = "";
-            // Сбрасываем форму, чтобы при следующем открытии было чисто
+        function resetForm() {
             form.reset();
             if (phoneInput) phoneInput.value = PHONE_PREFIX;
             showFormView();
         }
-
-        // Открытие модалки
-        document.querySelectorAll("[data-open-signup]").forEach(function (btn) {
-            btn.addEventListener("click", function (e) {
-                e.preventDefault();
-                openModal();
-                if (typeof ym === "function") ym(108780081, "reachGoal", "form_open");
-            });
-        });
-
-        // Закрытие
-        modal.querySelectorAll("[data-modal-close]").forEach(function (el) {
-            el.addEventListener("click", closeModal);
-        });
-        document.addEventListener("keydown", function (e) {
-            if (e.key === "Escape" && !modal.hidden) closeModal();
-        });
 
         // Submit
         form.addEventListener("submit", async function (e) {
@@ -229,11 +221,37 @@
                 genericError();
             } finally {
                 submit.disabled = false;
-                if (submitLabel) submitLabel.textContent = submit.getAttribute("data-default-label") || "Записаться на пробное";
+                if (submitLabel) submitLabel.textContent = submit.getAttribute("data-default-label") || "Записаться на пробное занятие";
             }
+        });
+
+        // Reset button on success view
+        document.querySelectorAll("[data-signup-reset]").forEach(function (btn) {
+            btn.addEventListener("click", function () {
+                resetForm();
+                const nameField = form.querySelector('[name="name"]');
+                if (nameField) setTimeout(function () { nameField.focus(); }, 50);
+            });
         });
     })();
 
+    // ===== CTA-кнопки (scroll к форме + ym goal form_open) =====
+    document.querySelectorAll("[data-scroll-form]").forEach(function (btn) {
+        btn.addEventListener("click", function (e) {
+            const target = document.getElementById("contacts");
+            if (!target) return;
+            e.preventDefault();
+            target.scrollIntoView({ behavior: "smooth", block: "start" });
+            if (typeof ym === "function") ym(108780081, "reachGoal", "form_open");
+            // Слегка задерживаем фокус, чтобы скролл успел доехать
+            setTimeout(function () {
+                const nameField = document.querySelector('[data-signup-form] [name="name"]');
+                if (nameField) nameField.focus({ preventScroll: true });
+            }, 600);
+        });
+    });
+
+    // ===== Hero video sound toggle =====
     const video = document.querySelector(".hero-video");
     const toggle = document.querySelector(".hero-sound-toggle");
     const label = toggle && toggle.querySelector(".hero-sound-label");

@@ -109,229 +109,238 @@
 
     <link rel="icon" type="image/png" href="favicon.png">
     <link rel="apple-touch-icon" href="favicon.png">
-    <link rel="stylesheet" href="style.css?v=20260514f">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css?v=20260521a">
 </head>
-<body>
-    <header class="site-header">
-        <a href="#top" class="logo">
-            <img src="assets/logo.png" alt="Логотип боксёрского клуба «Добрый Питер»">
-        </a>
-        <h1 class="site-title">Боксерский клуб <span class="accent">«Добрый Питер»</span></h1>
-    </header>
+<body id="top">
 
-    <nav class="main-nav">
-        <a href="#schedule">Расписание</a>
-        <a href="#about">О клубе</a>
-        <a href="#coach">Тренер</a>
-        <a href="#contacts">Как добраться</a>
-    </nav>
+<nav class="site-nav">
+    <a class="logo" href="#top">ДОБРЫЙ <span>ПИТЕР</span></a>
+    <ul class="nav-links">
+        <li><a href="#schedule">Расписание</a></li>
+        <li><a href="#about">О клубе</a></li>
+        <li><a href="#coach">Тренер</a></li>
+        <li><a href="#contacts">Контакты</a></li>
+    </ul>
+    <a class="nav-btn" href="#contacts" data-scroll-form>Пробное занятие</a>
+</nav>
 
-    <section class="hero" id="top">
-        <div class="hero-frame">
-        <video class="hero-video" autoplay muted loop playsinline preload="auto">
+<section class="hero">
+    <div class="hero-left">
+        <div>
+            <div class="hero-tag">Бокс · Санкт-Петербург</div>
+            <h1 class="hero-title">БОК<br>СЁР<br>СКИЙ<br><span class="line-red">КЛУБ</span></h1>
+            <p class="hero-desc">Тренировки для взрослых, подростков, женщин и детей. Калининский район, метро Лесная. Тренер с 2001 года.</p>
+            <a class="btn-red" href="#contacts" data-scroll-form>Записаться на пробное</a>
+        </div>
+        <div class="hero-meta">
+            <div class="hm-block"><div class="hm-num">2001</div><div class="hm-label">Стаж тренера</div></div>
+            <div class="hm-block"><div class="hm-num">7</div><div class="hm-label">Воспитано КМС</div></div>
+            <a class="hm-block" href="https://yandex.ru/maps/org/zal_boksa_dobry_piter/147122784209/reviews/" target="_blank" rel="noopener" title="Все отзывы на Яндекс.Картах"><div class="hm-num">5.0★</div><div class="hm-label">Яндекс.Карты</div></a>
+        </div>
+    </div>
+    <div class="hero-right">
+        <video class="hero-video" autoplay muted loop playsinline preload="auto" aria-label="Тренировка боксёрского клуба «Добрый Питер»">
             <source src="assets/hero.mp4" type="video/mp4">
         </video>
         <button class="hero-sound-toggle is-muted" type="button" aria-label="Включить звук">
-            <svg class="icon-muted" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <svg class="icon-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
                 <line x1="23" y1="9" x2="17" y2="15"></line>
                 <line x1="17" y1="9" x2="23" y2="15"></line>
             </svg>
-            <svg class="icon-unmuted" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <svg class="icon-unmuted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
                 <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
                 <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
             </svg>
             <span class="hero-sound-label">Включить звук</span>
         </button>
+        <span class="hero-right-badge">Метро Лесная</span>
+    </div>
+</section>
+
+<div class="strip">
+    <div class="strip-item">
+        <div class="strip-dot"></div>
+        <div class="strip-text"><p>5 групп</p><span>Дети, подростки, взрослые, женщины, инд.</span></div>
+    </div>
+    <div class="strip-item">
+        <div class="strip-dot"></div>
+        <div class="strip-text"><p>3 раза в неделю</p><span>Пн, Ср, Пт — основные группы</span></div>
+    </div>
+    <a class="strip-item" href="https://yandex.ru/maps/org/zal_boksa_dobry_piter/147122784209/reviews/" target="_blank" rel="noopener">
+        <div class="strip-dot"></div>
+        <div class="strip-text"><p>Рейтинг 5.0</p><span>Яндекс.Карты — все отзывы</span></div>
+    </a>
+</div>
+
+<section id="about" class="section">
+    <div class="sec-title">О клубе</div>
+    <div class="about-grid">
+        <div class="about-text">
+            <p><strong>Добрый Питер</strong> — боксёрский клуб для тех, кто хочет стать сильнее, увереннее и выносливее. У нас тренируются люди с разным уровнем подготовки: от новичков, впервые надевающих перчатки, до спортсменов на соревнованиях.</p>
+            <p>Тренировки ведут опытный тренер и действующие спортсмены. Помогают поставить технику, развить форму и выйти на новый уровень.</p>
+            <p>Честная работа, дисциплина и дружеская атмосфера. Не нужно «уже уметь» — достаточно прийти с желанием.</p>
         </div>
-    </section>
+        <div class="about-nums">
+            <div class="an"><div class="an-num">2001</div><div class="an-label">Год начала работы</div></div>
+            <div class="an"><div class="an-num">7</div><div class="an-label">Воспитанников КМС</div></div>
+            <div class="an"><div class="an-num">5</div><div class="an-label">Групп и форматов</div></div>
+            <div class="an"><div class="an-num">СЗФО</div><div class="an-label">Призёры чемпионатов</div></div>
+        </div>
+    </div>
+</section>
 
-    <main class="content">
-        <section id="schedule" class="section">
-            <h2>Расписание</h2>
-            <p class="section-subtitle">Сезон 2025 – 2026</p>
-            <div class="schedule-grid" id="schedule-grid">
-                <article class="schedule-card">
-                    <h3>Детская группа</h3>
-                    <table class="schedule-table">
-                        <tbody>
-                            <tr><td>Понедельник</td><td>16:00 – 17:15</td></tr>
-                            <tr><td>Среда</td><td>16:00 – 17:15</td></tr>
-                            <tr><td>Пятница</td><td>16:00 – 17:15</td></tr>
-                        </tbody>
-                    </table>
-                </article>
-                <article class="schedule-card">
-                    <h3>Подростковая группа</h3>
-                    <table class="schedule-table">
-                        <tbody>
-                            <tr><td>Понедельник</td><td>17:30 – 18:45</td></tr>
-                            <tr><td>Среда</td><td>17:30 – 18:45</td></tr>
-                            <tr><td>Пятница</td><td>17:30 – 18:45</td></tr>
-                        </tbody>
-                    </table>
-                </article>
-                <article class="schedule-card">
-                    <h3>Взрослая группа</h3>
-                    <table class="schedule-table">
-                        <tbody>
-                            <tr><td>Понедельник</td><td>20:30 – 22:00</td></tr>
-                            <tr><td>Среда</td><td>20:30 – 22:00</td></tr>
-                            <tr><td>Пятница</td><td>20:30 – 22:00</td></tr>
-                        </tbody>
-                    </table>
-                </article>
-                <article class="schedule-card">
-                    <h3>Женская группа</h3>
-                    <table class="schedule-table">
-                        <tbody>
-                            <tr><td>Вторник</td><td>09:30 – 10:30</td></tr>
-                            <tr><td>Четверг</td><td>09:30 – 10:30</td></tr>
-                            <tr><td>Суббота</td><td>11:00 – 12:00</td></tr>
-                        </tbody>
-                    </table>
-                </article>
-                <article class="schedule-card">
-                    <h3>Индивидуальные</h3>
-                    <table class="schedule-table">
-                        <tbody>
-                            <tr><td>Понедельник</td><td>10:30 – 13:30</td></tr>
-                            <tr><td>Вторник</td><td>07:00 – 13:00</td></tr>
-                            <tr><td>Среда</td><td>10:30 – 13:30</td></tr>
-                            <tr><td>Четверг</td><td>07:00 – 13:00</td></tr>
-                            <tr><td>Пятница</td><td>10:30 – 13:30</td></tr>
-                            <tr><td>Суббота</td><td>07:00 – 14:00</td></tr>
-                        </tbody>
-                    </table>
-                </article>
+<section class="photos-section" aria-label="Галерея клуба">
+    <div class="photos-grid">
+        <img class="photo-wide" src="assets/1.jpg" alt="Валерий Некрасов секундирует ученику клуба «Добрый Питер» в углу ринга" loading="lazy">
+        <img src="assets/2.jpg" alt="Тренер Валерий Некрасов даёт установку боксёру перед боем" loading="lazy">
+        <img src="assets/3.jpg" alt="Воспитанник детской группы клуба «Добрый Питер» с медалью турнира по боксу" loading="lazy">
+        <img src="assets/4.jpg" alt="Спортсмен клуба «Добрый Питер» перед выходом на бой" loading="lazy">
+        <img src="assets/5.jpg" alt="Тренер секундирует юному боксёру детской группы между раундами" loading="lazy">
+        <img src="assets/6.jpg" alt="Тренер Валерий Некрасов с воспитанником после победы на соревнованиях" loading="lazy">
+    </div>
+</section>
+
+<section id="schedule" class="section">
+    <div class="sec-title">Расписание · Сезон 2025–2026</div>
+    <div class="sch-grid" id="schedule-grid">
+        <article class="sch-card">
+            <div class="sch-card-title">Детская группа</div>
+            <div class="sch-row"><span class="sch-day">Пн</span><span class="sch-time">16:00–17:15</span></div>
+            <div class="sch-row"><span class="sch-day">Ср</span><span class="sch-time">16:00–17:15</span></div>
+            <div class="sch-row"><span class="sch-day">Пт</span><span class="sch-time">16:00–17:15</span></div>
+            <span class="sch-badge">3×/неделю</span>
+        </article>
+        <article class="sch-card">
+            <div class="sch-card-title">Подростковая</div>
+            <div class="sch-row"><span class="sch-day">Пн</span><span class="sch-time">17:30–18:45</span></div>
+            <div class="sch-row"><span class="sch-day">Ср</span><span class="sch-time">17:30–18:45</span></div>
+            <div class="sch-row"><span class="sch-day">Пт</span><span class="sch-time">17:30–18:45</span></div>
+            <span class="sch-badge">3×/неделю</span>
+        </article>
+        <article class="sch-card">
+            <div class="sch-card-title">Взрослая группа</div>
+            <div class="sch-row"><span class="sch-day">Пн</span><span class="sch-time">20:30–22:00</span></div>
+            <div class="sch-row"><span class="sch-day">Ср</span><span class="sch-time">20:30–22:00</span></div>
+            <div class="sch-row"><span class="sch-day">Пт</span><span class="sch-time">20:30–22:00</span></div>
+            <span class="sch-badge">3×/неделю</span>
+        </article>
+        <article class="sch-card">
+            <div class="sch-card-title">Женская группа</div>
+            <div class="sch-row"><span class="sch-day">Вт</span><span class="sch-time">09:30–10:30</span></div>
+            <div class="sch-row"><span class="sch-day">Чт</span><span class="sch-time">09:30–10:30</span></div>
+            <div class="sch-row"><span class="sch-day">Сб</span><span class="sch-time">11:00–12:00</span></div>
+            <span class="sch-badge">3×/неделю</span>
+        </article>
+        <article class="sch-card accent">
+            <div class="sch-card-title">Индивидуально</div>
+            <div class="sch-row"><span class="sch-day">Пн–Пт</span><span class="sch-time">07:00–13:30</span></div>
+            <div class="sch-row"><span class="sch-day">Суббота</span><span class="sch-time">07:00–14:00</span></div>
+            <span class="sch-badge">По записи</span>
+        </article>
+    </div>
+</section>
+
+<section id="coach" class="section">
+    <div class="sec-title">Тренер</div>
+    <div class="coach-grid">
+        <img class="coach-img" src="assets/trener.jpg" alt="Тренер по боксу Некрасов Валерий Владимирович — клуб «Добрый Питер»" loading="lazy">
+        <div>
+            <h2 class="coach-name">Некрасов<br>Валерий<br>Владимирович</h2>
+            <p class="coach-sub">Тренер высшей квалификационной категории</p>
+            <div class="coach-stat">
+                <div class="cs-num">7</div>
+                <div class="cs-text">воспитанников выполнили<br>норматив КМС</div>
             </div>
-        </section>
+            <p class="coach-bio">Тренерский стаж с 2001 года. Готовит спортсменов от начинающих до участников крупных соревнований. Победители Чемпионатов СЗФО и участники Первенства России.</p>
+            <p class="coach-bio">Дисциплина, внимательность к технике и индивидуальный подход — в каждой тренировке.</p>
+            <a class="btn-red" href="#contacts" data-scroll-form>Записаться к тренеру</a>
+        </div>
+    </div>
+</section>
 
-        <section id="signup" class="signup-cta-section">
-            <div class="signup-cta-card">
-                <p class="signup-cta-tagline"><strong>Твоя лучшая форма начинается здесь.</strong><br>Сделай первый шаг к&nbsp;силе, дисциплине, уверенности в&nbsp;себе!</p>
-                <button type="button" class="btn btn-primary btn-large" data-open-signup>Записаться на пробное занятие</button>
+<section id="reviews" class="section">
+    <div class="sec-title">Отзывы</div>
+    <div class="rev-score-row">
+        <span class="rev-score">5.0</span>
+        <span class="rev-sub"><a href="https://yandex.ru/maps/org/zal_boksa_dobry_piter/147122784209/reviews/" target="_blank" rel="noopener">Яндекс.Карты — все отзывы</a></span>
+    </div>
+    <div class="reviews-wrap" data-reviews-carousel data-interval="10000">
+        <button class="rev-arrow rev-prev" type="button" aria-label="Предыдущий отзыв">‹</button>
+        <div class="reviews-grid">
+            <article class="rev-card is-active">
+                <p class="rev-text">«Пришла на пробную за компанию, понимала, что бокс не про меня. В итоге уже хожу 2-й месяц — прям затянуло! Тренер так заряжает настроением и юмором, как будто прошла терапию у психолога.»</p>
+                <cite class="rev-author">Татьяна</cite>
+            </article>
+            <article class="rev-card">
+                <p class="rev-text">«Мне 58. Пришёл с лишним весом и заброшенным спортом. Под чутким руководством тренера втянулся, повысил нагрузки. Ушли некоторые проблемы с опорно-двигательным аппаратом.»</p>
+                <cite class="rev-author">Владимир Человьян</cite>
+            </article>
+            <article class="rev-card">
+                <p class="rev-text">«Дружелюбная атмосфера, отличный коллектив. Новичкам можно смело приходить. Тренер каждому уделяет время, укажет ошибки и покажет, как делать правильно.»</p>
+                <cite class="rev-author">Николай</cite>
+            </article>
+            <article class="rev-card">
+                <p class="rev-text">«Пришёл в зал с женой. Тренер — профессионал. Кроме нагрузок в зале, грамотно консультирует по питанию и занятиям дома. Психологическая поддержка и мотивация на результат.»</p>
+                <cite class="rev-author">Денис К.</cite>
+            </article>
+            <article class="rev-card">
+                <p class="rev-text">«Ходим всей семьёй на индивидуальную тренировку. Тренер отличный, объясняет понятно. Тренировки всегда разные: от бокса до растяжки. Классная атмосфера благодаря юмору тренера.»</p>
+                <cite class="rev-author">Анонимный отзыв</cite>
+            </article>
+            <article class="rev-card">
+                <p class="rev-text">«Привели сына — за год видим явные достижения как физические, так и в характере. Сама хожу в женскую группу. Требователен и внимателен к каждому.»</p>
+                <cite class="rev-author">Илона Терновская</cite>
+            </article>
+        </div>
+        <button class="rev-arrow rev-next" type="button" aria-label="Следующий отзыв">›</button>
+        <div class="rev-dots" role="tablist">
+            <button class="rev-dot is-active" type="button" aria-label="Отзыв 1"></button>
+            <button class="rev-dot" type="button" aria-label="Отзыв 2"></button>
+            <button class="rev-dot" type="button" aria-label="Отзыв 3"></button>
+            <button class="rev-dot" type="button" aria-label="Отзыв 4"></button>
+            <button class="rev-dot" type="button" aria-label="Отзыв 5"></button>
+            <button class="rev-dot" type="button" aria-label="Отзыв 6"></button>
+        </div>
+    </div>
+</section>
+
+<section id="contacts" class="section">
+    <div class="sec-title">Контакты и запись</div>
+    <div class="contact-grid">
+        <div class="contact-left">
+            <h2 class="contact-title">Приходи<br>на первое<br><span class="accent">занятие</span></h2>
+            <div class="cd-grid">
+                <div><div class="cd-label">Адрес</div><div class="cd-val">Полюстровский пр., 59, лит. Й</div></div>
+                <div><div class="cd-label">Метро</div><div class="cd-val">Лесная</div></div>
+                <div><div class="cd-label">Пн–Пт</div><div class="cd-val">07:00–22:00</div></div>
+                <div><div class="cd-label">Суббота</div><div class="cd-val">07:00–14:00</div></div>
             </div>
-        </section>
+            <iframe src="https://yandex.ru/map-widget/v1/?ll=30.381931%2C59.972397&z=15&ol=biz&oid=147122784209" frameborder="0" allowfullscreen="true" loading="lazy" title="Карта проезда к боксёрскому клубу «Добрый Питер»"></iframe>
+        </div>
 
-        <section id="about" class="section">
-            <h2>О клубе</h2>
-            <div class="about-text">
-                <p><strong>Добрый Питер</strong> — боксерский клуб в Санкт-Петербурге для тех, кто хочет стать сильнее, увереннее и выносливее.</p>
-                <p>У нас тренируются люди с разным уровнем подготовки: от новичков, которые впервые надевают перчатки, до спортсменов, выступающих на соревнованиях. Тренировки ведут опытные тренеры и действующие спортсмены — они помогают поставить технику, развить физическую форму и постепенно выйти на новый уровень.</p>
-                <p>Мы за честную работу, дисциплину и дружескую атмосферу. Здесь не нужно «уже уметь боксировать» — достаточно прийти с желанием заниматься. Остальному научим.</p>
-                <p class="about-closing">Добро пожаловать в боксерский клуб «Добрый Питер».<br>Здесь становятся сильнее — без лишнего пафоса, но с настоящей работой.</p>
-            </div>
-            <div class="about-photos">
-                <img src="assets/1.jpg" alt="Валерий Некрасов секундирует ученику клуба «Добрый Питер» в углу ринга" loading="lazy">
-                <img src="assets/2.jpg" alt="Тренер Валерий Некрасов даёт установку боксёру перед боем" loading="lazy">
-                <img src="assets/3.jpg" alt="Воспитанник детской группы клуба «Добрый Питер» с медалью турнира по боксу" loading="lazy">
-                <img src="assets/4.jpg" alt="Спортсмен клуба «Добрый Питер» перед выходом на бой" loading="lazy">
-                <img src="assets/5.jpg" alt="Тренер секундирует юному боксёру детской группы между раундами" loading="lazy">
-                <img src="assets/6.jpg" alt="Тренер Валерий Некрасов с воспитанником после победы на соревнованиях" loading="lazy">
-            </div>
-        </section>
-
-        <section id="coach" class="section">
-            <h2>Тренер</h2>
-            <div class="coach-layout">
-                <div class="coach-photo">
-                    <img src="assets/trener.jpg" alt="Тренер по боксу Некрасов Валерий Владимирович — клуб «Добрый Питер»" loading="lazy">
-                </div>
-                <div class="coach-info">
-                    <h3 class="coach-name">Некрасов Валерий Владимирович</h3>
-                    <p class="coach-title">Тренер высшей квалификационной категории с тренерским стажем с 2001 года.</p>
-                    <p>Валерий Владимирович готовит спортсменов разного уровня — от начинающих боксеров до участников крупных соревнований. Его воспитанники становились победителями и призерами Чемпионатов Республики Коми и Северо-Западного федерального округа России, а также участвовали в Первенстве России.</p>
-                    <p>Под его руководством <strong>7 спортсменов</strong> выполнили норматив кандидата в мастера спорта.</p>
-                    <p>В работе Валерий Владимирович сочетает дисциплину, внимательность к технике и индивидуальный подход. Его задача — не просто провести тренировку, а помочь спортсмену стать сильнее, увереннее и выйти на новый уровень в боксе.</p>
-                </div>
-            </div>
-        </section>
-
-        <section id="reviews" class="section">
-            <h2>О нас говорят</h2>
-            <div class="reviews-carousel" data-reviews-carousel data-interval="10000">
-                <button class="rc-arrow rc-prev" type="button" aria-label="Предыдущий отзыв">‹</button>
-                <div class="rc-track">
-                    <article class="rc-slide is-active">
-                        <p class="rc-text">«Пришла на&nbsp;пробную тренировку, шла за&nbsp;компанию — понимала, что бокс не&nbsp;про меня. В&nbsp;итоге уже хожу 2-й месяц, прям затянуло! Тренер так заряжает настроением, юмором, добротой — как будто прошла терапию у&nbsp;психолога. Особое внимание стоит выделить на&nbsp;разнообразие программ: от&nbsp;бокса до&nbsp;растяжки.»</p>
-                        <cite class="rc-author">Татьяна</cite>
-                    </article>
-                    <article class="rc-slide">
-                        <p class="rc-text">«Мне 58. Здесь занимаюсь уже 4&nbsp;месяца, пришёл практически не&nbsp;подготовленным — лишний вес, спорт был давно заброшен. Под чутким руководством опытного тренера втянулся в&nbsp;занятия, повысил нагрузки. Ушли некоторые проблемы с&nbsp;опорно-двигательным аппаратом. Подтверждаю: занятия боксом — правильный выбор для людей среднего и&nbsp;старшего возраста.»</p>
-                        <cite class="rc-author">Владимир Человьян</cite>
-                    </article>
-                    <article class="rc-slide">
-                        <p class="rc-text">«Отличный клуб для занятий боксом. Дружелюбная атмосфера, отличный коллектив — есть как новички, так и&nbsp;ребята, которые занимаются давно. Новичкам можно приходить, не&nbsp;бояться: никто вас сразу в&nbsp;спарринги не&nbsp;поставит. Тренер Валерий Владимирович каждому уделяет время, если есть ошибки в&nbsp;технике — укажет и&nbsp;покажет, как нужно делать правильно.»</p>
-                        <cite class="rc-author">Николай</cite>
-                    </article>
-                    <article class="rc-slide">
-                        <p class="rc-text">«Обычно отзывы не&nbsp;пишу, но&nbsp;очень захотелось оставить отзыв об&nbsp;этом зале. Пришёл в&nbsp;зал с&nbsp;женой. Тренер — профессионал. Тренировки проходят интересно. Но&nbsp;самое главное — это психологическая поддержка и&nbsp;мотивация на&nbsp;результат. Кроме нагрузок в&nbsp;зале, грамотно консультирует по&nbsp;питанию и&nbsp;занятиям дома.»</p>
-                        <cite class="rc-author">Денис К.</cite>
-                    </article>
-                    <article class="rc-slide">
-                        <p class="rc-text">«Ходим всей семьёй на&nbsp;индивидуальную тренировку — нравится всё и&nbsp;всем! Тренер отличный, объясняет максимально понятно, доступно, обязательно скорректирует и&nbsp;направит, если что-то не&nbsp;получается. Тренировки всегда разные, интересные: от&nbsp;бокса до&nbsp;растяжки и&nbsp;проработки всех групп мышц. Классная атмосфера в&nbsp;зале благодаря чувству юмора тренера и&nbsp;потрясающему музыкальному сопровождению.»</p>
-                        <cite class="rc-author">Анонимный отзыв</cite>
-                    </article>
-                    <article class="rc-slide">
-                        <p class="rc-text">«Отличный зал и&nbsp;замечательный тренер. Привели сына, за&nbsp;год занятий видим явные достижения как физические, так и&nbsp;в&nbsp;характере. Так&nbsp;же хожу сама в&nbsp;женскую группу. На&nbsp;тренировках всегда позитивная, дружелюбная атмосфера, но&nbsp;при этом Валерий требователен и&nbsp;внимателен к&nbsp;каждому.»</p>
-                        <cite class="rc-author">Илона Терновская</cite>
-                    </article>
-                </div>
-                <button class="rc-arrow rc-next" type="button" aria-label="Следующий отзыв">›</button>
-                <div class="rc-dots" role="tablist">
-                    <button class="rc-dot is-active" type="button" aria-label="Отзыв 1"></button>
-                    <button class="rc-dot" type="button" aria-label="Отзыв 2"></button>
-                    <button class="rc-dot" type="button" aria-label="Отзыв 3"></button>
-                    <button class="rc-dot" type="button" aria-label="Отзыв 4"></button>
-                    <button class="rc-dot" type="button" aria-label="Отзыв 5"></button>
-                    <button class="rc-dot" type="button" aria-label="Отзыв 6"></button>
-                </div>
-            </div>
-            <p class="reviews-rating">★ <strong>5.0</strong> — <a href="https://yandex.ru/maps/org/zal_boksa_dobry_piter/147122784209/reviews/" target="_blank" rel="noopener">все отзывы на&nbsp;Яндекс.Картах</a></p>
-        </section>
-
-        <section id="contacts" class="section">
-            <h2>Как добраться</h2>
-            <div class="contacts-layout">
-                <div class="contacts-info">
-                    <p><strong>Адрес:</strong> Санкт-Петербург, Полюстровский&nbsp;пр., 59, лит.&nbsp;Й</p>
-                    <p><strong>Метро:</strong> Лесная</p>
-                    <p><strong>Часы работы:</strong> Пн–Пт 07:00–22:00, Сб 07:00–14:00</p>
-                </div>
-                <div class="contacts-map">
-                    <iframe src="https://yandex.ru/map-widget/v1/?ll=30.381931%2C59.972397&z=17&ol=biz&oid=147122784209" width="100%" height="260" frameborder="0" allowfullscreen="true" loading="lazy" title="Карта проезда к боксерскому клубу «Добрый Питер»"></iframe>
-                    <p class="map-link"><a href="https://yandex.ru/maps/org/zal_boksa_dobry_piter/147122784209/" target="_blank" rel="noopener">Открыть на Яндекс.Картах →</a></p>
-                </div>
-            </div>
-        </section>
-
-    </main>
-
-    <div class="modal" data-signup-modal hidden role="dialog" aria-modal="true" aria-labelledby="signup-modal-title">
-        <div class="modal-backdrop" data-modal-close aria-hidden="true"></div>
-        <div class="modal-card modal-card-wide">
-            <button class="modal-close" type="button" data-modal-close aria-label="Закрыть">×</button>
-
+        <div class="contact-right">
             <div data-signup-form-view>
-                <h3 id="signup-modal-title">Записаться на пробное занятие</h3>
-                <p class="signup-intro">Оставьте контакты — тренер свяжется и&nbsp;расскажет, что взять с&nbsp;собой и&nbsp;в&nbsp;какое время удобнее прийти. Без обязательств.</p>
-
-                <div class="signup-block" data-signup-block data-tg-fallback="https://t.me/nekrasov_valeriy">
+                <div data-signup-block data-tg-fallback="https://t.me/nekrasov_valeriy">
                     <form class="signup-form" data-signup-form data-endpoint="https://dobrypiter-form-handler.nekrasov-smotra.workers.dev" novalidate>
-                        <div class="form-row">
-                            <label for="signup-name">Имя <span class="required" aria-hidden="true">*</span><span class="sr-only"> (обязательное поле)</span></label>
-                            <input id="signup-name" name="name" type="text" minlength="2" maxlength="60" required autocomplete="given-name">
+                        <div class="form-field">
+                            <label class="form-label" for="signup-name">Имя <span class="required" aria-hidden="true">*</span><span class="sr-only"> (обязательное поле)</span></label>
+                            <input id="signup-name" name="name" type="text" placeholder="Ваше имя" minlength="2" maxlength="60" required autocomplete="given-name">
                         </div>
 
-                        <div class="form-row">
-                            <label for="signup-phone">Телефон <span class="required" aria-hidden="true">*</span><span class="sr-only"> (обязательное поле)</span></label>
-                            <input id="signup-phone" name="phone" type="tel" inputmode="tel" maxlength="20" required autocomplete="tel" value="+7 ">
+                        <div class="form-field">
+                            <label class="form-label" for="signup-phone">Телефон <span class="required" aria-hidden="true">*</span><span class="sr-only"> (обязательное поле)</span></label>
+                            <input id="signup-phone" name="phone" type="tel" inputmode="tel" placeholder="+7 (___) ___-__-__" maxlength="20" required autocomplete="tel" value="+7 ">
                         </div>
 
-                        <div class="form-row">
-                            <label for="signup-group">Группа <span class="required" aria-hidden="true">*</span><span class="sr-only"> (обязательное поле)</span></label>
+                        <div class="form-field">
+                            <label class="form-label" for="signup-group">Группа <span class="required" aria-hidden="true">*</span><span class="sr-only"> (обязательное поле)</span></label>
                             <select id="signup-group" name="group" required>
                                 <option value="" disabled selected>— Выберите группу —</option>
                                 <option value="Взрослая">Взрослая</option>
@@ -343,9 +352,9 @@
                             </select>
                         </div>
 
-                        <div class="form-row">
-                            <label for="signup-comment">Комментарий</label>
-                            <textarea id="signup-comment" name="comment" rows="3" maxlength="600"></textarea>
+                        <div class="form-field">
+                            <label class="form-label" for="signup-comment">Комментарий</label>
+                            <textarea id="signup-comment" name="comment" rows="2" maxlength="600" placeholder="Необязательно"></textarea>
                         </div>
 
                         <div class="form-honeypot" aria-hidden="true">
@@ -353,41 +362,33 @@
                             <input id="signup-website" name="website" type="text" tabindex="-1" autocomplete="off">
                         </div>
 
-                        <button type="submit" class="btn btn-primary signup-submit" data-default-label="Записаться на пробное">
-                            <span class="signup-submit-label">Записаться на пробное</span>
+                        <button type="submit" class="btn-submit signup-submit" data-default-label="Записаться на пробное занятие">
+                            <span class="signup-submit-label">Записаться на пробное занятие</span>
                         </button>
 
                         <p class="form-status" data-form-status hidden></p>
+                        <p class="form-note">Без обязательств — тренер свяжется и расскажет, что взять с собой.</p>
                     </form>
                 </div>
             </div>
 
-            <div data-signup-success-view hidden>
+            <div class="signup-success" data-signup-success-view hidden>
                 <h3>Спасибо! Заявка отправлена.</h3>
                 <p>Тренер свяжется с&nbsp;вами в&nbsp;ближайшее время. Если хочется быстрее — напишите в&nbsp;<a href="https://t.me/nekrasov_valeriy" target="_blank" rel="noopener">Telegram</a>.</p>
-                <button type="button" class="btn btn-primary" data-modal-close>Хорошо</button>
+                <button type="button" class="btn-red" data-signup-reset>Отправить ещё одну</button>
             </div>
         </div>
     </div>
+</section>
 
-    <footer class="site-footer">
-        <p>© Боксерский клуб «Добрый Питер»</p>
-    </footer>
-
-    <div class="fab-stack">
-        <a class="fab fab-vk" href="https://vk.com/dobryipiter" target="_blank" rel="noopener" aria-label="ВКонтакте">
-            <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true">
-                <path fill="currentColor" d="M15.07 2H8.93C3.33 2 2 3.33 2 8.93v6.14C2 20.67 3.33 22 8.93 22h6.14c5.6 0 6.93-1.33 6.93-6.93V8.93C22 3.33 20.67 2 15.07 2zm3.15 14.27h-1.53c-.58 0-.76-.46-1.79-1.5-.91-.86-1.3-.97-1.53-.97-.32 0-.41.09-.41.53v1.38c0 .38-.12.6-1.12.6-1.65 0-3.48-1-4.77-2.86-1.94-2.69-2.47-4.71-2.47-5.13 0-.23.09-.44.53-.44h1.53c.39 0 .54.18.69.6.74 2.13 1.99 4 2.51 4 .19 0 .29-.09.29-.58V9.7c-.06-1.03-.6-1.12-.6-1.49 0-.18.15-.35.39-.35h2.4c.32 0 .43.17.43.55v2.7c0 .32.14.43.23.43.19 0 .35-.11.69-.46 1.06-1.18 1.81-3 1.81-3 .1-.22.27-.42.65-.42h1.53c.46 0 .56.24.46.55-.19.88-2.04 3.5-2.04 3.5-.16.26-.22.39 0 .69.17.22.71.71 1.07 1.13.66.74 1.16 1.36 1.3 1.78.13.42-.08.64-.51.64z"/>
-            </svg>
-        </a>
-        <a class="fab fab-tg" href="https://t.me/nekrasov_valeriy" target="_blank" rel="noopener" aria-label="Telegram">
-            <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true">
-                <path fill="currentColor" d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71L12.6 16.3l-1.99 1.93c-.23.23-.42.42-.83.42z"/>
-            </svg>
-            <span class="fab-pulse" aria-hidden="true"></span>
-        </a>
+<footer class="site-footer">
+    <span class="foot-copy">© Боксёрский клуб «Добрый Питер»</span>
+    <div class="foot-links">
+        <a href="https://vk.com/dobryipiter" target="_blank" rel="noopener">ВКонтакте</a>
+        <a href="https://t.me/nekrasov_valeriy" target="_blank" rel="noopener">Telegram</a>
     </div>
+</footer>
 
-    <script src="script.js?v=20260514f"></script>
+<script src="script.js?v=20260521a"></script>
 </body>
 </html>
