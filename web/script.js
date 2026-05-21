@@ -17,15 +17,13 @@
     function renderSchedule(target, data) {
         const groups = (data && Array.isArray(data.groups)) ? data.groups : [];
         if (!groups.length) return;
-        const lastIdx = groups.length - 1;
-        const html = groups.map(function (g, idx) {
+        const html = groups.map(function (g) {
             const rows = (g.sessions || []).map(function (s) {
                 return '<div class="sch-row"><span class="sch-day">' + escapeHtml(shortDay(s.day)) + '</span><span class="sch-time">' + escapeHtml(s.start) + '–' + escapeHtml(s.end) + '</span></div>';
             }).join("");
             const sessions = (g.sessions || []).length;
             const badge = sessions ? '<span class="sch-badge">' + sessions + '×/неделю</span>' : '';
-            const cls = (idx === lastIdx ? 'sch-card accent' : 'sch-card');
-            return '<article class="' + cls + '">' +
+            return '<article class="sch-card">' +
                 '<div class="sch-card-title">' + escapeHtml(g.name) + '</div>' +
                 rows +
                 badge +
