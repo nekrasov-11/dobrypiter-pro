@@ -23,7 +23,10 @@
     :root { --pad: calc((100vw - var(--content-max)) / 2); }
 }
 
-html { scroll-behavior: smooth; }
+html {
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+}
 
 body {
     font-family: 'Inter', sans-serif;
@@ -33,6 +36,7 @@ body {
     line-height: 1.6;
     min-height: 100vh;
     overflow-x: hidden;
+    width: 100%;
 }
 
 a { color: inherit; }
@@ -319,6 +323,8 @@ a { color: inherit; }
     line-height: 1.1;
     text-transform: uppercase;
     letter-spacing: .02em;
+    word-break: break-word;
+    overflow-wrap: anywhere;
 }
 .an-label {
     font-size: .88rem;
@@ -901,6 +907,10 @@ a { color: inherit; }
     /* На мобайле коллаж скрыт — показываем одну фотку команды */
     .photos-grid { display: none; }
     .photos-mobile { display: block; }
+    /* Чипы "О клубе" — уменьшаем размер слов, чтобы "РЕЗУЛЬТАТ" помещался */
+    .an { padding: 1.2rem 1rem; }
+    .an-num { font-size: 1.25rem; }
+    .an-label { font-size: .82rem; margin-top: .45rem; }
     .sch-grid { grid-template-columns: 1fr; }
     .sch-card:last-child:nth-child(odd) { grid-column: auto; }
     .cd-grid { grid-template-columns: 1fr; gap: 1rem; }
