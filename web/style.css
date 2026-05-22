@@ -457,37 +457,41 @@ h2.sec-title {
     color: var(--accent);
     margin-bottom: 1.5rem;
 }
+/* Чипы тренера — единый стиль с about-nums (О клубе) */
 .coach-badges {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
+    gap: 1px;
+    background: var(--lgray);
     margin-bottom: 1.8rem;
 }
 .coach-badge {
-    border: 1px solid var(--lgray);
-    padding: 1.1rem 1.2rem;
-    border-radius: 2px;
     background: var(--bg2);
-    transition: border-color .2s, transform .2s;
+    padding: 1.6rem 1.4rem;
+    transition: background .2s, transform .2s;
 }
 .coach-badge:hover {
-    border-color: var(--accent);
+    background: #232320;
     transform: translateY(-2px);
 }
 .coach-badge .cb-head {
     display: block;
     font-family: 'Unbounded', sans-serif;
-    font-size: 1.05rem;
+    font-size: 1.15rem;
     font-weight: 700;
     color: var(--accent);
-    line-height: 1.1;
-    margin-bottom: .5rem;
+    line-height: 1.15;
+    margin-bottom: .6rem;
+    text-transform: uppercase;
+    letter-spacing: .02em;
+    word-break: break-word;
+    overflow-wrap: anywhere;
 }
 .coach-badge .cb-text {
     display: block;
-    font-size: .9rem;
+    font-size: .88rem;
     color: var(--gray);
-    line-height: 1.45;
+    line-height: 1.5;
 }
 .coach-bio {
     font-size: 1rem;
@@ -767,6 +771,26 @@ h2.sec-title {
     .mobile-only { display: block; }
 }
 
+/* Reveal-on-scroll: каскадная вспышка accent-рамки при попадании в viewport.
+   --reveal-delay устанавливается из JS по индексу элемента в группе. */
+.sch-card.is-revealed,
+.an.is-revealed,
+.coach-badge.is-revealed {
+    animation: pulse-border 1.4s ease var(--reveal-delay, 0ms) both;
+}
+
+@keyframes pulse-border {
+    0%   { box-shadow: inset 0 0 0 1px transparent; }
+    35%  { box-shadow: inset 0 0 0 1.5px var(--accent); }
+    100% { box-shadow: inset 0 0 0 1px transparent; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .sch-card.is-revealed,
+    .an.is-revealed,
+    .coach-badge.is-revealed { animation: none; }
+}
+
 /* ===== Mobile / адаптив ===== */
 @media (max-width: 900px) {
     :root { --pad: 1.25rem; }
@@ -927,20 +951,10 @@ h2.sec-title {
     .an-num { font-size: 1.25rem; }
     .an-label { font-size: .82rem; margin-top: .45rem; }
 
-    /* Каскадная подсветка карточек при скролле (вместо hover) */
-    .sch-card.is-revealed {
-        background: #232320;
-        transform: translateY(-3px);
-        box-shadow: 0 6px 18px rgba(0, 0, 0, .35);
-    }
-    .an.is-revealed {
-        background: #232320;
-        transform: translateY(-2px);
-    }
-    .coach-badge.is-revealed {
-        border-color: var(--accent);
-        transform: translateY(-2px);
-    }
+    /* Mobile: уменьшаем шрифт в чипах тренера (длинные слова) */
+    .coach-badge { padding: 1.2rem 1rem; }
+    .coach-badge .cb-head { font-size: 1rem; margin-bottom: .45rem; }
+    .coach-badge .cb-text { font-size: .82rem; }
     .sch-grid { grid-template-columns: 1fr; }
     .sch-card:last-child:nth-child(odd) { grid-column: auto; }
     .cd-grid { grid-template-columns: 1fr; gap: 1rem; }

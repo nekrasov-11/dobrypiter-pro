@@ -264,12 +264,19 @@
         });
     });
 
-    // ===== Mobile: каскадная подсветка карточек при скролле =====
-    // На десктопе подсветка по hover, на мобайле — через IntersectionObserver
+    // ===== Reveal-on-scroll: каскадная вспышка рамок при появлении в viewport =====
+    // При scroll-in элементы получают is-revealed → CSS animation pulse-border проигрывается.
+    // При scroll-out класс снимается, чтобы при повторном scroll-in анимация играла заново.
+    // Каскад "слева направо, сверху вниз" — через CSS-переменную --reveal-delay по индексу.
     (function initRevealOnScroll() {
         if (!('IntersectionObserver' in window)) return;
-        const mq = window.matchMedia && window.matchMedia('(max-width: 900px)');
-        if (!mq || !mq.matches) return;
+
+        // Расставить stagger-задержку по индексу элемента в его контейнере
+        document.querySelectorAll('.sch-grid, .about-nums, .coach-badges').forEach(function (container) {
+            Array.prototype.forEach.call(container.children, function (el, i) {
+                el.style.setProperty('--reveal-delay', (i * 90) + 'ms');
+            });
+        });
 
         const els = document.querySelectorAll('.sch-card, .an, .coach-badge');
         if (!els.length) return;
@@ -278,10 +285,11 @@
             entries.forEach(function (entry) {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('is-revealed');
-                    obs.unobserve(entry.target);
+                } else {
+                    entry.target.classList.remove('is-revealed');
                 }
             });
-        }, { threshold: 0.35, rootMargin: '0px 0px -10% 0px' });
+        }, { threshold: 0.4, rootMargin: '0px 0px -5% 0px' });
 
         els.forEach(function (el) { obs.observe(el); });
     })();
