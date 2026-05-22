@@ -946,10 +946,13 @@ h2.sec-title {
     /* На мобайле коллаж скрыт — показываем одну фотку команды */
     .photos-grid { display: none; }
     .photos-mobile { display: block; }
-    /* Чипы "О клубе" — уменьшаем размер слов, чтобы "РЕЗУЛЬТАТ" помещался */
-    .an { padding: 1.2rem 1rem; }
-    .an-num { font-size: 1.25rem; }
-    .an-label { font-size: .82rem; margin-top: .45rem; }
+    /* Чипы "О клубе" — компактные размеры для узких экранов */
+    .an { padding: 1.1rem .85rem; }
+    .an-num {
+        font-size: 1.1rem;
+        letter-spacing: 0;
+    }
+    .an-label { font-size: .8rem; margin-top: .4rem; }
 
     /* Mobile: уменьшаем шрифт в чипах тренера (длинные слова) */
     .coach-badge { padding: 1.2rem 1rem; }
