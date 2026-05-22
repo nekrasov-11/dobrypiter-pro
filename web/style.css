@@ -923,6 +923,21 @@ h2.sec-title {
     .an { padding: 1.2rem 1rem; }
     .an-num { font-size: 1.25rem; }
     .an-label { font-size: .82rem; margin-top: .45rem; }
+
+    /* Каскадная подсветка карточек при скролле (вместо hover) */
+    .sch-card.is-revealed {
+        background: #232320;
+        transform: translateY(-3px);
+        box-shadow: 0 6px 18px rgba(0, 0, 0, .35);
+    }
+    .an.is-revealed {
+        background: #232320;
+        transform: translateY(-2px);
+    }
+    .coach-badge.is-revealed {
+        border-color: var(--accent);
+        transform: translateY(-2px);
+    }
     .sch-grid { grid-template-columns: 1fr; }
     .sch-card:last-child:nth-child(odd) { grid-column: auto; }
     .cd-grid { grid-template-columns: 1fr; gap: 1rem; }

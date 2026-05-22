@@ -77,6 +77,29 @@
         carouselEl.addEventListener("mouseenter", stopAuto);
         carouselEl.addEventListener("mouseleave", restartAuto);
 
+        // Свайп на мобильном
+        let touchStartX = null;
+        let touchStartY = null;
+        carouselEl.addEventListener("touchstart", function (e) {
+            if (!isCarouselActive()) return;
+            const t = e.changedTouches[0];
+            touchStartX = t.screenX;
+            touchStartY = t.screenY;
+        }, { passive: true });
+        carouselEl.addEventListener("touchend", function (e) {
+            if (touchStartX === null) return;
+            const t = e.changedTouches[0];
+            const dx = t.screenX - touchStartX;
+            const dy = t.screenY - touchStartY;
+            touchStartX = null;
+            // Минимум 40px горизонтально, и горизонталь больше вертикали (иначе это скролл)
+            if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) {
+                if (dx < 0) show(idx + 1);
+                else show(idx - 1);
+                restartAuto();
+            }
+        }, { passive: true });
+
         // При ресайзе пересмотреть, активна ли карусель
         let resizeTimer;
         window.addEventListener("resize", function () {
@@ -240,6 +263,28 @@
             }, 600);
         });
     });
+
+    // ===== Mobile: каскадная подсветка карточек при скролле =====
+    // На десктопе подсветка по hover, на мобайле — через IntersectionObserver
+    (function initRevealOnScroll() {
+        if (!('IntersectionObserver' in window)) return;
+        const mq = window.matchMedia && window.matchMedia('(max-width: 900px)');
+        if (!mq || !mq.matches) return;
+
+        const els = document.querySelectorAll('.sch-card, .an, .coach-badge');
+        if (!els.length) return;
+
+        const obs = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-revealed');
+                    obs.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.35, rootMargin: '0px 0px -10% 0px' });
+
+        els.forEach(function (el) { obs.observe(el); });
+    })();
 
     // ===== Hero video sound toggle =====
     const video = document.querySelector(".hero-video");
