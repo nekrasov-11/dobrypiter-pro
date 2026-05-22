@@ -818,7 +818,11 @@ h2.sec-title {
         aspect-ratio: 16 / 9;
     }
     .hero-meta { gap: 1.25rem; flex-wrap: wrap; }
-    .hero-meta > .hm-block { flex: 1 1 0; min-width: 0; }
+    .hero-meta > .hm-block {
+        flex: 1 1 0;
+        min-width: 0;
+        text-align: center;
+    }
 
     .section { padding: 2.5rem var(--pad); }
 
