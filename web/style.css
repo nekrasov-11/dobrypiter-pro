@@ -726,6 +726,15 @@ h2.sec-title {
     text-decoration: underline;
 }
 .signup-success a:hover { color: var(--accent); }
+.signup-success a.btn-red {
+    text-decoration: none;
+    margin-top: .3rem;
+}
+.signup-success a.btn-red:hover { color: #fff; }
+.signup-success-cta {
+    margin-top: .3rem;
+    margin-bottom: .9rem !important;
+}
 
 /* ===== Footer ===== */
 .site-footer {

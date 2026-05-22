@@ -187,11 +187,6 @@
             formView.hidden = true;
             successView.hidden = false;
         }
-        function resetForm() {
-            form.reset();
-            if (phoneInput) phoneInput.value = PHONE_PREFIX;
-            showFormView();
-        }
 
         // Submit
         form.addEventListener("submit", async function (e) {
@@ -238,14 +233,6 @@
             }
         });
 
-        // Reset button on success view
-        document.querySelectorAll("[data-signup-reset]").forEach(function (btn) {
-            btn.addEventListener("click", function () {
-                resetForm();
-                const nameField = form.querySelector('[name="name"]');
-                if (nameField) setTimeout(function () { nameField.focus(); }, 50);
-            });
-        });
     })();
 
     // ===== CTA-кнопки (scroll к форме + ym goal form_open) =====
