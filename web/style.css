@@ -797,7 +797,8 @@ h2.sec-title {
         min-height: 240px;
         aspect-ratio: 16 / 9;
     }
-    .hero-meta { gap: 1.5rem; flex-wrap: wrap; }
+    .hero-meta { gap: 1.25rem; flex-wrap: wrap; }
+    .hero-meta > .hm-block { flex: 1 1 0; min-width: 0; }
 
     .section { padding: 2.5rem var(--pad); }
 
@@ -914,8 +915,10 @@ h2.sec-title {
     .nav-links { gap: .5rem; }
     .nav-links a { font-size: .65rem; letter-spacing: .05em; }
     .logo img { height: 36px; }
-    .hero-meta > div, .hero-meta > a { flex: 1 1 40%; }
-    .hm-num { font-size: 1.4rem; }
+    .hero-meta { gap: 1rem; }
+    .hero-meta > .hm-block { flex: 1 1 0; }
+    .hm-num { font-size: 1.25rem; }
+    .hm-label { font-size: .7rem; }
     /* На мобайле коллаж скрыт — показываем одну фотку команды */
     .photos-grid { display: none; }
     .photos-mobile { display: block; }
