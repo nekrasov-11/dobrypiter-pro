@@ -329,14 +329,16 @@ h2.sec-title {
 }
 .an-num {
     font-family: 'Unbounded', sans-serif;
-    font-size: 1.6rem;
+    /* Адаптивный размер: на широких — 1.6rem, на iPhone 15 Pro (393px) — ~14px.
+       Формула выбрана так, чтобы "РЕЗУЛЬТАТ" (9 chars Unbounded uppercase)
+       умещался в ячейку без переноса. */
+    font-size: clamp(.9rem, calc(7px + 1.7vw), 1.6rem);
     font-weight: 700;
     color: var(--accent);
     line-height: 1.1;
     text-transform: uppercase;
     letter-spacing: .02em;
-    word-break: break-word;
-    overflow-wrap: anywhere;
+    white-space: nowrap;
 }
 .an-label {
     font-size: .88rem;
@@ -946,12 +948,9 @@ h2.sec-title {
     /* На мобайле коллаж скрыт — показываем одну фотку команды */
     .photos-grid { display: none; }
     .photos-mobile { display: block; }
-    /* Чипы "О клубе" — компактные размеры для узких экранов */
+    /* Чипы "О клубе" — компактные размеры для узких экранов;
+       размер .an-num задан clamp'ом выше, тут только padding и label */
     .an { padding: 1.1rem .85rem; }
-    .an-num {
-        font-size: 1.1rem;
-        letter-spacing: 0;
-    }
     .an-label { font-size: .8rem; margin-top: .4rem; }
 
     /* Mobile: уменьшаем шрифт в чипах тренера (длинные слова) */
