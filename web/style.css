@@ -267,6 +267,18 @@ a { color: inherit; }
     border-bottom: 1px solid var(--lgray);
 }
 
+h2.sec-title {
+    font-family: 'Unbounded', sans-serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    margin: 0 0 2.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    line-height: 1.2;
+}
 .sec-title {
     font-family: 'Unbounded', sans-serif;
     font-size: 1.15rem;
