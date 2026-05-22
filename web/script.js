@@ -264,34 +264,69 @@
         });
     });
 
-    // ===== Reveal-on-scroll: каскадная вспышка рамок при появлении в viewport =====
-    // При scroll-in элементы получают is-revealed → CSS animation pulse-border проигрывается.
-    // При scroll-out класс снимается, чтобы при повторном scroll-in анимация играла заново.
-    // Каскад "слева направо, сверху вниз" — через CSS-переменную --reveal-delay по индексу.
+    // ===== Reveal-on-scroll (только мобайл): scroll-driven подсветка =====
+    // В каждой группе чипов (.sch-grid, .about-nums, .coach-badges) подсвечен ровно один
+    // элемент — тот, на чей sub-range приходится текущая позиция скролла внутри группы.
+    // Track группы: от момента, когда её верх достигает 2/3 viewport (group ещё внизу),
+    // до момента, когда её низ достигает 1/3 viewport (group уже сверху).
+    // Внутри track элементы делят прогресс [0..1] на равные сегменты.
     (function initRevealOnScroll() {
-        if (!('IntersectionObserver' in window)) return;
+        const mq = window.matchMedia && window.matchMedia('(max-width: 900px)');
+        if (!mq) return;
 
-        // Расставить stagger-задержку по индексу элемента в его контейнере
-        document.querySelectorAll('.sch-grid, .about-nums, .coach-badges').forEach(function (container) {
-            Array.prototype.forEach.call(container.children, function (el, i) {
-                el.style.setProperty('--reveal-delay', (i * 90) + 'ms');
+        const groups = Array.prototype.slice.call(
+            document.querySelectorAll('.sch-grid, .about-nums, .coach-badges')
+        );
+        if (!groups.length) return;
+
+        function clearAll() {
+            groups.forEach(function (g) {
+                Array.prototype.forEach.call(g.children, function (el) {
+                    el.classList.remove('is-revealed');
+                });
             });
-        });
+        }
 
-        const els = document.querySelectorAll('.sch-card, .an, .coach-badge');
-        if (!els.length) return;
+        function update() {
+            if (!mq.matches) { clearAll(); return; }
+            const vh = window.innerHeight;
+            groups.forEach(function (group) {
+                const items = group.children;
+                const n = items.length;
+                if (!n) return;
+                const rect = group.getBoundingClientRect();
+                // progress = 0 когда top группы на 2/3 viewport (только-только въезжает)
+                // progress = 1 когда bottom на 1/3 viewport (уже почти прошла мимо)
+                const range = vh / 3 + rect.height;
+                const progress = (vh * 2 / 3 - rect.top) / range;
+                const p = Math.max(0, Math.min(1, progress));
 
-        const obs = new IntersectionObserver(function (entries) {
-            entries.forEach(function (entry) {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('is-revealed');
-                } else {
-                    entry.target.classList.remove('is-revealed');
+                // Активен элемент, на чей сегмент попал прогресс. Вне track — никто.
+                let activeIdx = -1;
+                if (p > 0 && p < 1) {
+                    activeIdx = Math.min(n - 1, Math.floor(p * n));
+                }
+                for (let i = 0; i < n; i++) {
+                    items[i].classList.toggle('is-revealed', i === activeIdx);
                 }
             });
-        }, { threshold: 0.4, rootMargin: '0px 0px -5% 0px' });
+        }
 
-        els.forEach(function (el) { obs.observe(el); });
+        let ticking = false;
+        function onScroll() {
+            if (ticking) return;
+            ticking = true;
+            requestAnimationFrame(function () {
+                update();
+                ticking = false;
+            });
+        }
+
+        window.addEventListener('scroll', onScroll, { passive: true });
+        window.addEventListener('resize', onScroll, { passive: true });
+        if (mq.addEventListener) mq.addEventListener('change', onScroll);
+        else if (mq.addListener) mq.addListener(onScroll);
+        update();
     })();
 
     // ===== Hero video sound toggle =====
