@@ -67,7 +67,7 @@ export default {
     }
 
     const name = clean(data && data.name, 100);
-    const phone = clean(data && data.phone, 30);
+    const phone = clean(data && data.phone, 30).replace(/\s+/g, '');
     const group = clean(data && data.group, 60);
     const comment = clean(data && data.comment, 1000);
 
