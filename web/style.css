@@ -1022,6 +1022,19 @@ h2.sec-title {
     line-height: 1.3;
     margin: 0 0 1.3rem;
 }
+/* Цифры в hero страницы цен — с «₽», а ширину блока задаёт подпись,
+   поэтому знак валюты срывался на вторую строку. Подпись здесь идёт
+   над ценой (column-reverse — порядок в разметке остаётся общим). */
+.hero-meta--prices .hm-block {
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: flex-start;
+}
+.hero-meta--prices .hm-num { white-space: nowrap; }
+.hero-meta--prices .hm-label {
+    margin-top: 0;
+    margin-bottom: .35rem;
+}
 .price-note {
     margin-top: 1.6rem;
     font-size: .9rem;
