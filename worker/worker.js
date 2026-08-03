@@ -70,6 +70,9 @@ export default {
     const phone = clean(data && data.phone, 30).replace(/\s+/g, '');
     const group = clean(data && data.group, 60);
     const comment = clean(data && data.comment, 1000);
+    // Страница-источник заявки ("/", "/tseny/", …). Поле опциональное:
+    // клиенты со старым закэшированным script.js его не шлют.
+    const page = clean(data && data.page, 100);
 
     if (!name || name.length < 2 || !phone || !group) {
       return jsonResponse({ error: 'Missing required fields' }, 400, origin);
@@ -87,7 +90,7 @@ export default {
       '📞 *Телефон:* ' + escapeMarkdown(phone) + '\n' +
       '🎯 *Группа:* ' + escapeMarkdown(group) + '\n' +
       '💬 *Комментарий:* ' + escapeMarkdown(comment || 'нет') + '\n\n' +
-      '🌐 _Источник: ' + escapeMarkdown(source) + '_';
+      '🌐 _Источник: ' + escapeMarkdown(source + (page ? ' · ' + page : '')) + '_';
 
     try {
       const tgResponse = await fetch(

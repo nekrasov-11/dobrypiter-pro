@@ -15,7 +15,17 @@
     }
 
     function renderSchedule(target, data) {
-        const groups = (data && Array.isArray(data.groups)) ? data.groups : [];
+        let groups = (data && Array.isArray(data.groups)) ? data.groups : [];
+        // Подстраницы показывают только свои группы: data-schedule-groups="Детская группа,Подростковая группа".
+        // Имена должны совпадать с теми, что отдаёт /api/schedule (правятся в админке).
+        const filterAttr = target.getAttribute("data-schedule-groups");
+        if (filterAttr) {
+            const wanted = filterAttr.split(",").map(function (s) { return s.trim().toLowerCase(); });
+            groups = groups.filter(function (g) {
+                return wanted.indexOf(String(g.name || "").trim().toLowerCase()) !== -1;
+            });
+        }
+        // Фильтр ничего не нашёл (группу переименовали) — оставляем статичный фолбэк из HTML.
         if (!groups.length) return;
         const html = groups.map(function (g) {
             const rows = (g.sessions || []).map(function (s) {
@@ -211,6 +221,7 @@
                 group: (formData.get("group") || "").toString(),
                 comment: (formData.get("comment") || "").toString().trim(),
                 website: (formData.get("website") || "").toString(),
+                page: location.pathname,
             };
             submit.disabled = true;
             if (submitLabel) submitLabel.textContent = "Отправляем…";
