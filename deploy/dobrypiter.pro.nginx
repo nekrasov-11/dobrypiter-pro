@@ -1,6 +1,5 @@
 server {
-    listen 80;
-    server_name dobrypiter.pro www.dobrypiter.pro;
+    server_name dobrypiter.pro;
 
     root /var/www/dobrypiter-pro/web;
     index index.html;
@@ -13,10 +12,36 @@ server {
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
     }
 
+    add_header Content-Security-Policy "frame-ancestors 'self' https://*.yandex.ru https://*.yandex.com https://webvisor.com https://*.webvisor.com https://metrika.yandex.ru" always;
+
     location / {
         try_files $uri $uri/ =404;
     }
 
     gzip on;
     gzip_types text/plain application/json application/javascript text/css image/svg+xml;
+
+    listen 443 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/dobrypiter.pro/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/dobrypiter.pro/privkey.pem;
+    include /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+}
+
+# www — отдельный блок: 301 на главное зеркало
+server {
+    listen 443 ssl;
+    server_name www.dobrypiter.pro;
+    ssl_certificate /etc/letsencrypt/live/dobrypiter.pro/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/dobrypiter.pro/privkey.pem;
+    include /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+    return 301 https://dobrypiter.pro$request_uri;
+}
+
+# http — всё на https без www
+server {
+    listen 80;
+    server_name dobrypiter.pro www.dobrypiter.pro;
+    return 301 https://dobrypiter.pro$request_uri;
 }
