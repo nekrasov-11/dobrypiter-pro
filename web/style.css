@@ -1040,6 +1040,14 @@ h2.sec-title {
 
 @media (max-width: 900px) {
     .sch-grid--prices { grid-template-columns: repeat(2, 1fr); }
+    /* Базовый .hero-right на мобилке сочетает min-height: 240px с aspect-ratio: 16/9,
+       из-за чего получает ширину 427px и обрезается по краям экрана. Для видео на
+       главной это допустимо, для фото — режет людей в кадре. */
+    .hero-right--photo {
+        aspect-ratio: auto;
+        min-height: 0;
+        height: 240px;
+    }
 }
 
 @media (max-width: 600px) {
