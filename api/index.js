@@ -1,5 +1,4 @@
 const express = require('express');
-const cors = require('cors');
 const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
@@ -8,14 +7,92 @@ const app = express();
 const PORT = process.env.PORT || 3002;
 const DATA_DIR = process.env.DATA_DIR || path.join(__dirname, '..', 'data');
 
-const ADMIN_LOGIN = process.env.ADMIN_LOGIN || '89128691888';
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'molotboy';
+const ADMIN_LOGIN = process.env.ADMIN_LOGIN;
+const ADMIN_PASSWORD_HASH = process.env.ADMIN_PASSWORD_HASH;
+
+if (!ADMIN_LOGIN || !ADMIN_PASSWORD_HASH) {
+  process.stderr.write(
+    'FATAL: не заданы переменные окружения ADMIN_LOGIN и/или ADMIN_PASSWORD_HASH.\n' +
+    'Задайте их в /etc/dobrypiter/api.env (см. README.md).\n' +
+    'Хэш пароля генерируется скриптом: node generate-password-hash.js <пароль>\n'
+  );
+  process.exit(1);
+}
+
+const hashParts = ADMIN_PASSWORD_HASH.split(':');
+if (hashParts.length !== 3 || hashParts[0] !== 'scrypt' || !/^[0-9a-f]+$/i.test(hashParts[1]) || !/^[0-9a-f]+$/i.test(hashParts[2])) {
+  process.stderr.write(
+    'FATAL: ADMIN_PASSWORD_HASH имеет неверный формат. Ожидается scrypt:<salt_hex>:<hash_hex>.\n' +
+    'Сгенерируйте заново: node generate-password-hash.js <пароль>\n'
+  );
+  process.exit(1);
+}
+const PASSWORD_SALT = Buffer.from(hashParts[1], 'hex');
+const PASSWORD_HASH = Buffer.from(hashParts[2], 'hex');
+
 const SCHEDULE_FILE = 'schedule.json';
 const TOKENS_FILE = 'tokens.json';
 const TOKEN_TTL = 7 * 24 * 60 * 60 * 1000;
 
-app.use(cors());
 app.use(express.json());
+
+// --- Credential checks (constant-time) ---
+function safeEqualStrings(a, b) {
+  // Выравниваем длину, чтобы timingSafeEqual не кидал исключение
+  const bufA = Buffer.from(String(a), 'utf-8');
+  const bufB = Buffer.from(String(b), 'utf-8');
+  const len = Math.max(bufA.length, bufB.length, 1);
+  const padA = Buffer.alloc(len);
+  const padB = Buffer.alloc(len);
+  bufA.copy(padA);
+  bufB.copy(padB);
+  return crypto.timingSafeEqual(padA, padB) && bufA.length === bufB.length;
+}
+
+function verifyPassword(password) {
+  const derived = crypto.scryptSync(String(password), PASSWORD_SALT, PASSWORD_HASH.length);
+  return crypto.timingSafeEqual(derived, PASSWORD_HASH);
+}
+
+// --- Rate limit для /api/login ---
+const LOGIN_MAX_ATTEMPTS = 5;
+const LOGIN_WINDOW_MS = 15 * 60 * 1000;
+const loginAttempts = new Map(); // ip -> { count, firstAt }
+
+function clientIP(req) {
+  const forwarded = req.headers['x-forwarded-for'];
+  if (typeof forwarded === 'string' && forwarded.length > 0) {
+    return forwarded.split(',')[0].trim();
+  }
+  return req.ip;
+}
+
+function isRateLimited(ip) {
+  const entry = loginAttempts.get(ip);
+  if (!entry) return false;
+  if (Date.now() - entry.firstAt > LOGIN_WINDOW_MS) {
+    loginAttempts.delete(ip);
+    return false;
+  }
+  return entry.count >= LOGIN_MAX_ATTEMPTS;
+}
+
+function recordFailedAttempt(ip) {
+  const now = Date.now();
+  const entry = loginAttempts.get(ip);
+  if (!entry || now - entry.firstAt > LOGIN_WINDOW_MS) {
+    loginAttempts.set(ip, { count: 1, firstAt: now });
+  } else {
+    entry.count += 1;
+  }
+}
+
+setInterval(() => {
+  const now = Date.now();
+  for (const [ip, entry] of loginAttempts.entries()) {
+    if (now - entry.firstAt > LOGIN_WINDOW_MS) loginAttempts.delete(ip);
+  }
+}, 60 * 1000).unref();
 
 // --- Token store ---
 const tokens = new Map();
@@ -72,10 +149,18 @@ function adminAuth(req, res, next) {
 
 // --- Routes ---
 app.post('/api/login', (req, res) => {
-  const { login, password } = req.body;
-  if (login === ADMIN_LOGIN && password === ADMIN_PASSWORD) {
+  const ip = clientIP(req);
+  if (isRateLimited(ip)) {
+    return res.status(429).json({ error: 'Слишком много попыток входа. Попробуйте через 15 минут.' });
+  }
+  const { login, password } = req.body || {};
+  const loginOk = safeEqualStrings(login || '', ADMIN_LOGIN);
+  const passwordOk = verifyPassword(password || '');
+  if (loginOk && passwordOk) {
+    loginAttempts.delete(ip);
     return res.json({ token: generateToken() });
   }
+  recordFailedAttempt(ip);
   res.status(401).json({ error: 'Invalid credentials' });
 });
 

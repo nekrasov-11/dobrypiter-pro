@@ -30,7 +30,22 @@ API-сервис: `systemctl restart dobrypiter-api` после изменени
 
 ## Учётные данные админки
 
-В env-vars systemd-сервиса (`/etc/systemd/system/dobrypiter-api.service`):
+Креды хранятся вне git — в файле `/etc/dobrypiter/api.env` на VPS. Systemd-юнит подключает его через `EnvironmentFile=`. Формат файла:
 
-- `ADMIN_LOGIN`
-- `ADMIN_PASSWORD`
+```
+PORT=3002
+DATA_DIR=/var/www/dobrypiter-pro/data
+ADMIN_LOGIN=<логин>
+ADMIN_PASSWORD_HASH=scrypt:<salt_hex>:<hash_hex>
+```
+
+Пароль хранится только в виде scrypt-хэша. Сгенерировать строку `ADMIN_PASSWORD_HASH=...` при смене пароля:
+
+```
+cd /var/www/dobrypiter-pro/api
+node generate-password-hash.js '<новый пароль>'
+```
+
+Вывод скрипта вставить в `/etc/dobrypiter/api.env`, затем `systemctl restart dobrypiter-api`. Без заданных `ADMIN_LOGIN` и `ADMIN_PASSWORD_HASH` API не стартует.
+
+Права на файл: `chmod 600 /etc/dobrypiter/api.env`.
