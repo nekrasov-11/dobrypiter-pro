@@ -1054,4 +1054,11 @@ h2.sec-title {
     .sch-grid--prices { grid-template-columns: 1fr; }
     .coach-badges--faq { grid-template-columns: 1fr; }
     .subpage-prose { margin-bottom: 1.6rem; }
+    /* Дубль обязателен: у .coach-badge .cb-head в блоке 600px та же специфичность,
+       и без этого правила оно перебьёт FAQ-вариант при любой правке порядка. */
+    .coach-badges--faq .cb-head {
+        font-size: 1rem;
+        text-transform: none;
+        letter-spacing: 0;
+    }
 }
