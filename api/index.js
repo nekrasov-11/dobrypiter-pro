@@ -20,7 +20,9 @@ if (!ADMIN_LOGIN || !ADMIN_PASSWORD_HASH) {
 }
 
 const hashParts = ADMIN_PASSWORD_HASH.split(':');
-if (hashParts.length !== 3 || hashParts[0] !== 'scrypt' || !/^[0-9a-f]+$/i.test(hashParts[1]) || !/^[0-9a-f]+$/i.test(hashParts[2])) {
+// Длины фиксированы генератором: salt 16 байт (32 hex), хэш 64 байта (128 hex).
+// Нечётный/укороченный hex дал бы пустые буферы и пропуск любого пароля.
+if (hashParts.length !== 3 || hashParts[0] !== 'scrypt' || !/^[0-9a-f]{32}$/i.test(hashParts[1]) || !/^[0-9a-f]{128}$/i.test(hashParts[2])) {
   process.stderr.write(
     'FATAL: ADMIN_PASSWORD_HASH имеет неверный формат. Ожидается scrypt:<salt_hex>:<hash_hex>.\n' +
     'Сгенерируйте заново: node generate-password-hash.js <пароль>\n'
@@ -60,9 +62,11 @@ const LOGIN_WINDOW_MS = 15 * 60 * 1000;
 const loginAttempts = new Map(); // ip -> { count, firstAt }
 
 function clientIP(req) {
-  const forwarded = req.headers['x-forwarded-for'];
-  if (typeof forwarded === 'string' && forwarded.length > 0) {
-    return forwarded.split(',')[0].trim();
+  // X-Real-IP ставит nginx из $remote_addr — клиент подделать его не может,
+  // в отличие от X-Forwarded-For, куда nginx дописывает присланное клиентом
+  const realIP = req.headers['x-real-ip'];
+  if (typeof realIP === 'string' && realIP.length > 0) {
+    return realIP.trim();
   }
   return req.ip;
 }
@@ -184,7 +188,8 @@ app.put('/api/schedule', adminAuth, (req, res) => {
   res.json({ ok: true });
 });
 
-app.listen(PORT, () => {
+// Только localhost: снаружи API ходит через nginx-прокси, прямой доступ к порту не нужен
+app.listen(PORT, '127.0.0.1', () => {
   console.log('dobrypiter-api running on port ' + PORT);
   if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
   loadTokens();
