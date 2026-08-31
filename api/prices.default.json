@@ -1,0 +1,51 @@
+{
+  "categories": [
+    {
+      "id": "kids",
+      "title": "Бокс для детей и подростков",
+      "badge": "6–13 и 14–17 лет",
+      "schemaGroup": "детская и подростковая группы",
+      "items": [
+        { "id": "sub12", "name": "Абонемент 12 тренировок", "kind": "sub", "price": 5000 },
+        { "id": "single", "name": "Разовая тренировка", "kind": "single", "price": 500 },
+        { "id": "trial", "name": "Пробная тренировка", "kind": "trial", "price": 0 }
+      ]
+    },
+    {
+      "id": "adult",
+      "title": "Бокс для взрослых",
+      "badge": "от 18 лет",
+      "schemaGroup": "взрослая группа",
+      "items": [
+        { "id": "sub8", "name": "Абонемент 8 тренировок", "kind": "sub", "price": 5000 },
+        { "id": "sub12", "name": "Абонемент 12 тренировок", "kind": "sub", "price": 6000 },
+        { "id": "single", "name": "Разовая тренировка", "kind": "single", "price": 1000 },
+        { "id": "trial", "name": "Пробная тренировка", "kind": "trial", "price": 500 }
+      ]
+    },
+    {
+      "id": "women",
+      "title": "Бокс для женщин",
+      "badge": "без опыта — можно",
+      "schemaGroup": "женская группа",
+      "items": [
+        { "id": "sub8", "name": "Абонемент 8 тренировок", "kind": "sub", "price": 5000 },
+        { "id": "sub12", "name": "Абонемент 12 тренировок", "kind": "sub", "price": 6000 },
+        { "id": "single", "name": "Разовая тренировка", "kind": "single", "price": 1000 },
+        { "id": "trial", "name": "Пробная тренировка", "kind": "trial", "price": 500 }
+      ]
+    },
+    {
+      "id": "personal",
+      "title": "Индивидуально и семьёй",
+      "badge": "по договорённости",
+      "schemaGroup": "",
+      "items": [
+        { "id": "personal", "name": "Персональная тренировка", "kind": "other", "price": 2500 },
+        { "id": "split", "name": "Сплит-тренировка (вдвоём)", "kind": "other", "price": 4000 },
+        { "id": "family", "name": "Семейная тренировка", "kind": "other", "price": 3000 }
+      ]
+    }
+  ],
+  "note": "Абонемент действует месяц с первой тренировки."
+}
