@@ -13,8 +13,27 @@
     const saveBtn = document.getElementById("save-btn");
     const logoutBtn = document.getElementById("logout-btn");
     const status = document.getElementById("status");
+    const editorTitle = document.getElementById("editor-title");
+    const tabButtons = document.querySelectorAll(".tab");
+    const tabSections = {
+        schedule: document.getElementById("tab-schedule"),
+        prices: document.getElementById("tab-prices"),
+    };
+    const TAB_TITLES = { schedule: "Расписание тренировок", prices: "Цены" };
+    const pricesRoot = document.getElementById("price-categories");
+    const addCategoryBtn = document.getElementById("add-category-btn");
+    const noteInput = document.getElementById("price-note");
+
+    const PRICE_KINDS = [
+        { value: "sub", label: "Абонемент" },
+        { value: "single", label: "Разовая" },
+        { value: "trial", label: "Пробная" },
+        { value: "other", label: "Другое" },
+    ];
 
     let schedule = { groups: [] };
+    let prices = { categories: [], note: "" };
+    let activeTab = "schedule";
 
     function getToken() { return localStorage.getItem(TOKEN_KEY); }
     function setToken(t) { localStorage.setItem(TOKEN_KEY, t); }
@@ -29,8 +48,25 @@
     function showEditor() {
         loginView.hidden = true;
         editorView.hidden = false;
+        showTab(activeTab);
         loadSchedule();
+        loadPrices();
     }
+
+    function showTab(name) {
+        activeTab = name;
+        Object.keys(tabSections).forEach(function (key) {
+            tabSections[key].hidden = key !== name;
+        });
+        tabButtons.forEach(function (btn) {
+            btn.classList.toggle("is-active", btn.dataset.tab === name);
+        });
+        editorTitle.textContent = TAB_TITLES[name];
+    }
+
+    tabButtons.forEach(function (btn) {
+        btn.addEventListener("click", function () { showTab(btn.dataset.tab); });
+    });
 
     function showStatus(message, kind) {
         status.textContent = message;
@@ -173,21 +209,211 @@
         return row;
     }
 
+    async function loadPrices() {
+        try {
+            const res = await fetch("/api/prices");
+            const data = await res.json();
+            prices = data && Array.isArray(data.categories) ? data : { categories: [], note: "" };
+            if (typeof prices.note !== "string") prices.note = "";
+            renderPrices();
+        } catch (e) {
+            showStatus("Не удалось загрузить цены", "error");
+        }
+    }
+
+    function renderPrices() {
+        pricesRoot.innerHTML = "";
+        prices.categories.forEach(function (cat, cIdx) {
+            pricesRoot.appendChild(buildCategory(cat, cIdx));
+        });
+        noteInput.value = prices.note || "";
+    }
+
+    // id связывают позицию с текстом страницы (абзацы, FAQ, микроразметка),
+    // поэтому владельцу их не показываем — новым позициям выдаём сами.
+    function uniqueId(prefix, taken) {
+        let n = 1;
+        while (taken.indexOf(prefix + n) !== -1) n += 1;
+        return prefix + n;
+    }
+
+    function buildCategory(cat, cIdx) {
+        const el = document.createElement("article");
+        el.className = "group";
+
+        const header = document.createElement("div");
+        header.className = "group-header";
+
+        const titleInput = document.createElement("input");
+        titleInput.className = "group-name";
+        titleInput.type = "text";
+        titleInput.maxLength = 80;
+        titleInput.value = cat.title || "";
+        titleInput.placeholder = "Название раздела";
+        titleInput.addEventListener("input", function () {
+            prices.categories[cIdx].title = titleInput.value;
+        });
+
+        const removeBtn = document.createElement("button");
+        removeBtn.className = "btn btn-icon";
+        removeBtn.type = "button";
+        removeBtn.textContent = "✕";
+        removeBtn.title = "Удалить раздел";
+        removeBtn.addEventListener("click", function () {
+            if (!confirm("Удалить раздел «" + (cat.title || "Без названия") + "»?")) return;
+            prices.categories.splice(cIdx, 1);
+            renderPrices();
+        });
+
+        header.appendChild(titleInput);
+        header.appendChild(removeBtn);
+        el.appendChild(header);
+
+        const body = document.createElement("div");
+        body.className = "sessions";
+
+        const meta = document.createElement("div");
+        meta.className = "price-meta";
+        meta.appendChild(metaField("Подпись под ценами", cat.badge || "", 80, "например: от 18 лет", function (v) {
+            prices.categories[cIdx].badge = v;
+        }));
+        meta.appendChild(metaField("Уточнение для поисковиков", cat.schemaGroup || "", 80, "например: взрослая группа", function (v) {
+            prices.categories[cIdx].schemaGroup = v;
+        }));
+        body.appendChild(meta);
+
+        (cat.items || []).forEach(function (item, iIdx) {
+            body.appendChild(buildPriceItem(item, cIdx, iIdx));
+        });
+
+        const addItemBtn = document.createElement("button");
+        addItemBtn.type = "button";
+        addItemBtn.className = "add-session";
+        addItemBtn.textContent = "+ Добавить позицию";
+        addItemBtn.addEventListener("click", function () {
+            const taken = prices.categories[cIdx].items.map(function (i) { return i.id; });
+            prices.categories[cIdx].items.push({
+                id: uniqueId("item", taken), name: "Новая позиция", kind: "other", price: 0,
+            });
+            renderPrices();
+        });
+        body.appendChild(addItemBtn);
+
+        el.appendChild(body);
+        return el;
+    }
+
+    function metaField(labelText, value, maxLength, placeholder, onChange) {
+        const label = document.createElement("label");
+        label.className = "price-meta-field";
+        const span = document.createElement("span");
+        span.textContent = labelText;
+        const input = document.createElement("input");
+        input.type = "text";
+        input.maxLength = maxLength;
+        input.value = value;
+        input.placeholder = placeholder;
+        input.addEventListener("input", function () { onChange(input.value); });
+        label.appendChild(span);
+        label.appendChild(input);
+        return label;
+    }
+
+    function buildPriceItem(item, cIdx, iIdx) {
+        const row = document.createElement("div");
+        row.className = "price-row";
+
+        const nameInput = document.createElement("input");
+        nameInput.type = "text";
+        nameInput.maxLength = 80;
+        nameInput.value = item.name || "";
+        nameInput.placeholder = "Название позиции";
+        nameInput.addEventListener("input", function () {
+            prices.categories[cIdx].items[iIdx].name = nameInput.value;
+        });
+
+        const kindSelect = document.createElement("select");
+        kindSelect.title = "По позициям с типом «Абонемент» считается «абонементы от …» в заголовке страницы";
+        PRICE_KINDS.forEach(function (kind) {
+            const opt = document.createElement("option");
+            opt.value = kind.value;
+            opt.textContent = kind.label;
+            if (kind.value === (item.kind || "other")) opt.selected = true;
+            kindSelect.appendChild(opt);
+        });
+        kindSelect.addEventListener("change", function () {
+            prices.categories[cIdx].items[iIdx].kind = kindSelect.value;
+        });
+
+        const priceWrap = document.createElement("div");
+        priceWrap.className = "price-input";
+        const priceInput = document.createElement("input");
+        priceInput.type = "number";
+        priceInput.min = "0";
+        priceInput.max = "1000000";
+        priceInput.step = "50";
+        priceInput.value = String(item.price);
+        priceInput.addEventListener("input", function () {
+            const parsed = parseInt(priceInput.value, 10);
+            prices.categories[cIdx].items[iIdx].price = isNaN(parsed) ? 0 : parsed;
+            hint.hidden = prices.categories[cIdx].items[iIdx].price !== 0;
+        });
+        const currency = document.createElement("span");
+        currency.className = "price-currency";
+        currency.textContent = "₽";
+        priceWrap.appendChild(priceInput);
+        priceWrap.appendChild(currency);
+
+        // Ноль на странице печатается словом — подсказываем, чтобы это не выглядело ошибкой
+        const hint = document.createElement("span");
+        hint.className = "price-free-hint";
+        hint.textContent = "на сайте: бесплатно";
+        hint.hidden = item.price !== 0;
+
+        const removeBtn = document.createElement("button");
+        removeBtn.type = "button";
+        removeBtn.className = "btn btn-icon";
+        removeBtn.textContent = "✕";
+        removeBtn.title = "Удалить позицию";
+        removeBtn.addEventListener("click", function () {
+            prices.categories[cIdx].items.splice(iIdx, 1);
+            renderPrices();
+        });
+
+        row.appendChild(nameInput);
+        row.appendChild(kindSelect);
+        row.appendChild(priceWrap);
+        row.appendChild(hint);
+        row.appendChild(removeBtn);
+        return row;
+    }
+
+    noteInput.addEventListener("input", function () { prices.note = noteInput.value; });
+
+    addCategoryBtn.addEventListener("click", function () {
+        const taken = prices.categories.map(function (c) { return c.id; });
+        prices.categories.push({
+            id: uniqueId("cat", taken), title: "Новый раздел", badge: "", schemaGroup: "",
+            items: [{ id: "item1", name: "Новая позиция", kind: "other", price: 0 }],
+        });
+        renderPrices();
+    });
+
     addGroupBtn.addEventListener("click", function () {
         schedule.groups.push({ name: "Новая группа", sessions: [] });
         render();
     });
 
-    saveBtn.addEventListener("click", async function () {
+    async function save(endpoint, payload, successMessage) {
         saveBtn.disabled = true;
         try {
-            const res = await fetch("/api/schedule", {
+            const res = await fetch(endpoint, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": "Bearer " + getToken(),
                 },
-                body: JSON.stringify(schedule),
+                body: JSON.stringify(payload),
             });
             if (res.status === 401 || res.status === 403) {
                 clearToken();
@@ -199,11 +425,19 @@
                 showStatus(data.error || "Ошибка сохранения", "error");
                 return;
             }
-            showStatus("Сохранено", "success");
+            showStatus(successMessage, "success");
         } catch (e) {
             showStatus("Сетевая ошибка", "error");
         } finally {
             saveBtn.disabled = false;
+        }
+    }
+
+    saveBtn.addEventListener("click", function () {
+        if (activeTab === "prices") {
+            save("/api/prices", prices, "Сохранено, страница цен обновлена");
+        } else {
+            save("/api/schedule", schedule, "Сохранено");
         }
     });
 

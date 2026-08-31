@@ -32,7 +32,10 @@ if (hashParts.length !== 3 || hashParts[0] !== 'scrypt' || !/^[0-9a-f]{32}$/i.te
 const PASSWORD_SALT = Buffer.from(hashParts[1], 'hex');
 const PASSWORD_HASH = Buffer.from(hashParts[2], 'hex');
 
+const renderPrices = require('./render-prices');
+
 const SCHEDULE_FILE = 'schedule.json';
+const PRICES_FILE = 'prices.json';
 const TOKENS_FILE = 'tokens.json';
 const TOKEN_TTL = 7 * 24 * 60 * 60 * 1000;
 
@@ -188,6 +191,74 @@ app.put('/api/schedule', adminAuth, (req, res) => {
   res.json({ ok: true });
 });
 
+function defaultPrices() {
+  return JSON.parse(fs.readFileSync(path.join(__dirname, 'prices.default.json'), 'utf-8'));
+}
+
+const PRICE_KINDS = ['sub', 'single', 'trial', 'other'];
+const PRICE_ID_RE = /^[a-z0-9_-]{1,32}$/i;
+
+function isText(value, max) {
+  return typeof value === 'string' && value.trim().length > 0 && value.length <= max;
+}
+function isOptionalText(value, max) {
+  return value === undefined || (typeof value === 'string' && value.length <= max);
+}
+
+function isValidPrices(data) {
+  if (!data || !Array.isArray(data.categories)) return false;
+  if (data.categories.length < 1 || data.categories.length > 12) return false;
+  if (!isOptionalText(data.note, 300)) return false;
+
+  const catIds = new Set();
+  for (const cat of data.categories) {
+    if (!cat || typeof cat !== 'object') return false;
+    if (!isText(cat.id, 32) || !PRICE_ID_RE.test(cat.id) || catIds.has(cat.id)) return false;
+    catIds.add(cat.id);
+    if (!isText(cat.title, 80)) return false;
+    if (!isOptionalText(cat.badge, 80) || !isOptionalText(cat.schemaGroup, 80)) return false;
+    if (!Array.isArray(cat.items) || cat.items.length < 1 || cat.items.length > 20) return false;
+
+    const itemIds = new Set();
+    for (const item of cat.items) {
+      if (!item || typeof item !== 'object') return false;
+      if (!isText(item.id, 32) || !PRICE_ID_RE.test(item.id) || itemIds.has(item.id)) return false;
+      itemIds.add(item.id);
+      if (!isText(item.name, 80)) return false;
+      if (!Number.isInteger(item.price) || item.price < 0 || item.price > 1000000) return false;
+      if (item.kind !== undefined && PRICE_KINDS.indexOf(item.kind) === -1) return false;
+    }
+  }
+  return true;
+}
+
+app.get('/api/prices', (req, res) => {
+  res.json(readJSON(PRICES_FILE) || defaultPrices());
+});
+
+app.put('/api/prices', adminAuth, (req, res) => {
+  if (!isValidPrices(req.body)) return res.status(400).json({ error: 'Неверный формат прайса' });
+
+  // Сначала пробный рендер: если владелец удалил позицию, на которую ссылается
+  // текст страницы, лучше вернуть понятную ошибку, чем испортить SEO-страницу.
+  try {
+    renderPrices.renderAll(req.body, { dryRun: true });
+  } catch (e) {
+    if (e.isRenderError) return res.status(400).json({ error: e.message });
+    throw e;
+  }
+
+  writeJSON(PRICES_FILE, req.body);
+
+  try {
+    renderPrices.renderAll(req.body);
+  } catch (e) {
+    process.stderr.write('Ошибка рендера цен: ' + e.message + '\n');
+    return res.status(500).json({ error: 'Прайс сохранён, но обновить страницу не удалось: ' + e.message });
+  }
+  res.json({ ok: true });
+});
+
 // Только localhost: снаружи API ходит через nginx-прокси, прямой доступ к порту не нужен
 app.listen(PORT, '127.0.0.1', () => {
   console.log('dobrypiter-api running on port ' + PORT);
@@ -225,4 +296,14 @@ app.listen(PORT, '127.0.0.1', () => {
       ]},
     ]
   });
+
+  // Деплой делает `git reset --hard`, откатывая цены на странице к закоммиченным.
+  // Рендер при старте возвращает их к тому, что владелец сохранил в админке.
+  if (!readJSON(PRICES_FILE)) writeJSON(PRICES_FILE, defaultPrices());
+  try {
+    const changed = renderPrices.renderAll(readJSON(PRICES_FILE));
+    if (changed.length) console.log('цены отрендерены: ' + changed.join(', '));
+  } catch (e) {
+    process.stderr.write('Ошибка рендера цен при старте: ' + e.message + '\n');
+  }
 });

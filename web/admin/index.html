@@ -30,16 +30,42 @@
 
     <div class="page" id="editor-view" hidden>
         <header class="editor-header">
-            <h1>Расписание тренировок</h1>
+            <h1 id="editor-title">Расписание тренировок</h1>
             <div class="actions">
                 <a href="/" class="btn btn-ghost">← На главную</a>
                 <button type="button" id="save-btn" class="btn btn-primary">Сохранить</button>
                 <button type="button" id="logout-btn" class="btn btn-ghost">Выйти</button>
             </div>
         </header>
+
+        <div class="tabs">
+            <button type="button" class="tab is-active" data-tab="schedule">Расписание</button>
+            <button type="button" class="tab" data-tab="prices">Цены</button>
+        </div>
+
         <p class="status" id="status" hidden></p>
-        <div id="groups"></div>
-        <button type="button" id="add-group-btn" class="btn btn-add">+ Добавить группу</button>
+
+        <section id="tab-schedule">
+            <div id="groups"></div>
+            <button type="button" id="add-group-btn" class="btn btn-add">+ Добавить группу</button>
+        </section>
+
+        <section id="tab-prices" hidden>
+            <div id="price-categories"></div>
+            <button type="button" id="add-category-btn" class="btn btn-add">+ Добавить раздел</button>
+
+            <label class="price-note-field">
+                <span>Примечание под таблицей цен</span>
+                <textarea id="price-note" rows="2" maxlength="300"></textarea>
+            </label>
+
+            <p class="hint">
+                Цены в таблице, в блоке под заголовком, в заголовке вкладки браузера и в описании
+                для поисковиков обновятся на <a href="/tseny/" target="_blank" rel="noopener">странице цен</a>
+                сразу после сохранения. Если добавили или убрали позицию — проверьте текст абзацев
+                и ответы в разделе «Вопросы о ценах»: формулировки там правятся вручную.
+            </p>
+        </section>
     </div>
 
     <script src="admin.js"></script>

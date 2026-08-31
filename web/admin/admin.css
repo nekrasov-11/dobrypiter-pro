@@ -274,3 +274,140 @@ input:focus, select:focus {
     .session-row input[type="time"]:nth-of-type(2) { grid-area: end; }
     .session-row .btn-icon { grid-area: delete; }
 }
+
+/* --- вкладки разделов админки --- */
+
+.tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.tab {
+    padding: 8px 18px;
+    background: transparent;
+    color: var(--muted);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+}
+.tab:hover { border-color: var(--accent); color: var(--accent); }
+.tab.is-active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+}
+
+/* --- редактор цен --- */
+
+.price-meta {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 4px;
+}
+
+.price-meta-field {
+    margin-bottom: 0;
+    font-size: 0.75rem;
+}
+
+.price-row {
+    display: grid;
+    grid-template-columns: 1fr 130px 130px 120px auto;
+    gap: 8px;
+    align-items: center;
+}
+
+/* Колонки заданы явно: подсказка про «бесплатно» есть не у всех строк,
+   а без этого скрытая ячейка сдвигала бы соседние поля.
+   Только для широких экранов — на мобилке раскладка своя, через grid-template-areas. */
+@media (min-width: 601px) {
+    .price-row > input[type="text"] { grid-column: 1; }
+    .price-row > select { grid-column: 2; }
+    .price-row > .price-input { grid-column: 3; }
+    .price-row > .price-free-hint { grid-column: 4; }
+    .price-row > .btn-icon { grid-column: 5; }
+}
+
+.price-row input,
+.price-row select { margin-top: 0; }
+
+.price-input {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.price-input input {
+    padding-right: 28px;
+    text-align: right;
+}
+
+.price-currency {
+    position: absolute;
+    right: 10px;
+    color: var(--muted);
+    pointer-events: none;
+}
+
+.price-free-hint {
+    font-size: 0.75rem;
+    color: var(--muted);
+    white-space: nowrap;
+}
+
+.price-note-field {
+    margin-top: 20px;
+    margin-bottom: 0;
+}
+
+.price-note-field textarea {
+    display: block;
+    width: 100%;
+    margin-top: 6px;
+    padding: 10px 12px;
+    background: rgba(0, 0, 0, 0.5);
+    color: var(--fg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 1rem;
+    text-transform: none;
+    letter-spacing: 0;
+    resize: vertical;
+}
+.price-note-field textarea:focus { outline: none; border-color: var(--accent); }
+
+.hint {
+    margin-top: 18px;
+    padding: 14px 16px;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--muted);
+    border-radius: 4px;
+    color: var(--muted);
+    font-size: 0.85rem;
+}
+.hint a { color: var(--accent); }
+
+@media (max-width: 600px) {
+    .price-meta { grid-template-columns: 1fr; }
+
+    .price-row {
+        grid-template-columns: 1fr 1fr auto;
+        grid-template-areas:
+            "name name delete"
+            "kind price price"
+            "hint hint hint";
+    }
+    .price-row > input[type="text"] { grid-area: name; }
+    .price-row > select { grid-area: kind; }
+    .price-row > .price-input { grid-area: price; }
+    .price-row > .price-free-hint { grid-area: hint; }
+    .price-row > .btn-icon { grid-area: delete; }
+}
