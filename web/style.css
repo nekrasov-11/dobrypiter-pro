@@ -444,12 +444,14 @@ h2.sec-title {
 .sch-row {
     display: flex;
     justify-content: space-between;
+    gap: 1rem;
     padding: .55rem 0;
     border-bottom: 1px solid rgba(255, 255, 255, .06);
 }
 .sch-row:last-of-type { border-bottom: none; }
 .sch-day { font-size: .85rem; color: var(--gray); }
-.sch-time { font-size: .85rem; font-weight: 500; color: var(--white); }
+/* Цена/время не переносятся: при длинном названии слева перенос отрывал «₽» на новую строку */
+.sch-time { font-size: .85rem; font-weight: 500; color: var(--white); white-space: nowrap; flex-shrink: 0; }
 
 .sch-badge {
     display: inline-block;
