@@ -26,7 +26,15 @@ ssh root@VPS deploy-dobrypiter-prod      # подтянуть main и обнов
 ssh root@VPS deploy-dobrypiter-review    # подтянуть dev и обновить review
 ```
 
-API-сервис: `systemctl restart dobrypiter-api` после изменений в `api/`.
+API-сервисы: `dobrypiter-api` (прод, порт 3002) и `dobrypiter-api-review`
+(review, порт 3003). Оба рестартятся своим скриптом деплоя; вручную —
+`systemctl restart dobrypiter-api` / `systemctl restart dobrypiter-api-review`.
+
+**У прода и review всё раздельно:** свой инстанс API, свой каталог `data/`
+(`schedule.json`, `prices.json`, `tokens.json`) и свой `web/`. Правки расписания
+и цен в review-админке на прод не попадают — и наоборот. Юниты лежат в `deploy/`,
+переменные окружения — в `/etc/dobrypiter/api.env` и `/etc/dobrypiter/api-review.env`.
+nginx проксирует `/api/` на 3002 для `dobrypiter.pro` и на 3003 для `review.dobrypiter.pro`.
 
 ## Цены
 
@@ -63,16 +71,12 @@ og/twitter-описания, микроразметка `Offer` и `FAQPage`. Ф
 node api/render-prices.js --check
 ```
 
-2. Review-деплой не рестартит API, поэтому рендер вызывается в самом скрипте деплоя
-   (`/usr/local/bin/deploy-dobrypiter-review`). Каталоги, в которые пишет рендерер, задаёт
-   переменная `RENDER_TARGETS` в `/etc/dobrypiter/api.env` (список через запятую,
-   по умолчанию — `web/` рядом с `api/`).
+2. Каталоги, в которые пишет рендерер, задаёт переменная `RENDER_TARGETS`
+   (список через запятую; по умолчанию — `web/` рядом с `api/`). У каждого окружения
+   она своя и указывает только на его собственный `web/`.
 
 Позицию, на которую ссылается текст страницы, удалить через админку нельзя: API делает пробный
 рендер и возвращает понятную ошибку вместо того, чтобы испортить SEO-страницу.
-
-Данные общие для прода и review — API один, из прод-чекаута. Правка цен в review-админке
-меняет цены и на проде.
 
 ## Учётные данные админки
 

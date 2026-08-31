@@ -1,0 +1,14 @@
+[Unit]
+Description=review.dobrypiter.pro API server
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/var/www/dobrypiter-pro-review/api
+ExecStart=/usr/bin/node index.js
+Restart=on-failure
+RestartSec=5
+EnvironmentFile=/etc/dobrypiter/api-review.env
+
+[Install]
+WantedBy=multi-user.target
